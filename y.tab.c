@@ -82,6 +82,7 @@ int yyparse(void);
 int yylex(void);
 extern FILE *yyin;
 FILE *fp2, *fp3;
+ofstream codeAsm;
 extern int line_num;
 extern int error;
 extern FILE *logout, *tokenout;
@@ -139,7 +140,7 @@ string newTemp()
 
 
 
-#line 143 "y.tab.c" /* yacc.c:339  */
+#line 144 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -274,7 +275,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 278 "y.tab.c" /* yacc.c:358  */
+#line 279 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -575,14 +576,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    97,    97,   123,   136,   146,   156,   165,   176,   284,
-     325,   325,   600,   600,   740,   773,   790,   822,   838,   838,
-     870,   870,   893,   979,   989,   999,  1012,  1074,  1127,  1156,
-    1156,  1207,  1219,  1235,  1243,  1251,  1259,  1277,  1293,  1311,
-    1327,  1347,  1374,  1392,  1413,  1446,  1498,  1511,  1616,  1628,
-    1669,  1680,  1719,  1732,  1794,  1805,  1921,  1937,  1961,  1975,
-    2001,  2139,  2157,  2166,  2175,  2184,  2210,  2240,  2254,  2261,
-    2293
+       0,    98,    98,   136,   155,   165,   176,   187,   201,   309,
+     350,   350,   627,   627,   771,   804,   821,   853,   869,   869,
+     903,   903,   926,  1012,  1022,  1032,  1045,  1107,  1160,  1189,
+    1189,  1240,  1252,  1273,  1281,  1289,  1297,  1315,  1343,  1361,
+    1377,  1397,  1424,  1442,  1463,  1496,  1554,  1567,  1711,  1723,
+    1814,  1825,  1908,  1921,  2011,  2022,  2162,  2178,  2204,  2218,
+    2267,  2405,  2426,  2435,  2444,  2453,  2494,  2543,  2557,  2564,
+    2596
 };
 #endif
 
@@ -1447,7 +1448,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 98 "1505010.y" /* yacc.c:1646  */
+#line 99 "1505010.y" /* yacc.c:1646  */
     {
 		//printf("At line no: %d start : program\n\n", line_num);
 		//fprintf(fp2,"At line no: %d start : program\n\n", line_num);		
@@ -1466,16 +1467,28 @@ yyreduce:
 			fprintf(fp3, "Total Errors: %d\n\n", error);
 		}	
 		
-		ofstream codeOut;
-		codeOut.open("code.asm");
-		codeOut << (yyvsp[0])->code;
+		//ofstream codeOut;
+		//codeAsm.open("code.asm");
+		string top = ".MODEL SMALL \n.STACK 100H \n.DATA\n";
+		string var;
+		codeAsm << top;
+		for(int i=0; i< tempCount; i++)
+		{
+			var = "\tt" + to_string(i) + " DW ?\n";
+			codeAsm << var;
+		}
+		codeAsm << ".CODE \nMAIN PROC \n";
+		codeAsm << (yyval)->code;
+		codeAsm << "\nMAIN ENDP\n";
+		codeAsm << "END MAIN\n";
+		
 		
 	}
-#line 1475 "y.tab.c" /* yacc.c:1646  */
+#line 1488 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 123 "1505010.y" /* yacc.c:1646  */
+#line 136 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d program : program unit\n\n", line_num);
 			fprintf(fp2, "At line no: %d program : program unit\n\n", line_num);
@@ -1487,13 +1500,19 @@ yyreduce:
 			(yyval)->setName(allConcat);
 			//$$->setType("program");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
-	
+			(yyval)->code = (yyvsp[-1])->code + (yyvsp[0])->code;
+			
+			//codeAsm.open("code.asm");
+			//codeAsm << $$->code;
+			
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+		
 			}
-#line 1493 "y.tab.c" /* yacc.c:1646  */
+#line 1512 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 136 "1505010.y" /* yacc.c:1646  */
+#line 155 "1505010.y" /* yacc.c:1646  */
     {
 		//printf("At line no: %d program : unit\n\n", line_num);
 		fprintf(fp2, "At line no: %d program : unit\n\n", line_num);
@@ -1502,11 +1521,11 @@ yyreduce:
 		//$$->setType("program");
 		fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 		}
-#line 1506 "y.tab.c" /* yacc.c:1646  */
+#line 1525 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 146 "1505010.y" /* yacc.c:1646  */
+#line 165 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d unit : var_declaration\n\n", line_num);
 			fprintf(fp2, "At line no: %d unit : var_declaration\n\n", line_num);
@@ -1516,12 +1535,13 @@ yyreduce:
 			(yyval)->setType((yyvsp[0])->getType());
 			(yyval)->type = (yyvsp[0])->type;
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			
 			}
-#line 1521 "y.tab.c" /* yacc.c:1646  */
+#line 1541 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 156 "1505010.y" /* yacc.c:1646  */
+#line 176 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d unit : func_declaration\n\n", line_num);
 			fprintf(fp2, "At line no: %d unit : func_declaration\n\n", line_num);
@@ -1529,13 +1549,15 @@ yyreduce:
 			//printf("%s\n\n", $1->getName().c_str());
 			//$$->setType("unit");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
-	
+			
+			//$$ = $1;
+			
 			}
-#line 1535 "y.tab.c" /* yacc.c:1646  */
+#line 1557 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 165 "1505010.y" /* yacc.c:1646  */
+#line 187 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d unit : func_definition\n\n", line_num);
 			fprintf(fp2, "At line no: %d unit : func_definition\n\n", line_num);
@@ -1543,13 +1565,16 @@ yyreduce:
 			//printf("%s\n\n", $1->getName().c_str());
 			//$$->setType("unit");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
-	
+			
+			//$$ = $1;
+			//fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
 			}
-#line 1549 "y.tab.c" /* yacc.c:1646  */
+#line 1574 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 176 "1505010.y" /* yacc.c:1646  */
+#line 201 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d func_declaration : type_specifier ID LPAREN parameter_list RPAREN SEMICOLON \n\n", line_num);
 			fprintf(fp2, "At line no: %d func_declaration : type_specifier ID LPAREN parameter_list RPAREN SEMICOLON \n\n", line_num);
@@ -1658,11 +1683,11 @@ yyreduce:
 			
 			errFlag=0;
 			}
-#line 1662 "y.tab.c" /* yacc.c:1646  */
+#line 1687 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 284 "1505010.y" /* yacc.c:1646  */
+#line 309 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d func_declaration : type_specifier ID LPAREN RPAREN SEMICOLON \n\n", line_num);
 			fprintf(fp2, "At line no: %d func_declaration : type_specifier ID LPAREN RPAREN SEMICOLON \n\n", line_num);
@@ -1702,11 +1727,11 @@ yyreduce:
 			
 			errFlag=0;
 			}
-#line 1706 "y.tab.c" /* yacc.c:1646  */
+#line 1731 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 325 "1505010.y" /* yacc.c:1646  */
+#line 350 "1505010.y" /* yacc.c:1646  */
     {
 		
 		
@@ -1873,11 +1898,11 @@ yyreduce:
 		
 		}
 		}
-#line 1877 "y.tab.c" /* yacc.c:1646  */
+#line 1902 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 490 "1505010.y" /* yacc.c:1646  */
+#line 515 "1505010.y" /* yacc.c:1646  */
     {
 			
 			
@@ -1986,13 +2011,15 @@ yyreduce:
 			
 			errFlag=0;
 			
+			(yyval)->code = (yyvsp[0])->code;
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
 			
 			}
-#line 1992 "y.tab.c" /* yacc.c:1646  */
+#line 2019 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 600 "1505010.y" /* yacc.c:1646  */
+#line 627 "1505010.y" /* yacc.c:1646  */
     { 
 			
 			
@@ -2026,11 +2053,11 @@ yyreduce:
 			table->enterScope(fp2);
 			
 			}
-#line 2030 "y.tab.c" /* yacc.c:1646  */
+#line 2057 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 632 "1505010.y" /* yacc.c:1646  */
+#line 659 "1505010.y" /* yacc.c:1646  */
     {
 			
 			
@@ -2135,12 +2162,16 @@ yyreduce:
 			
 			errFlag=0;
 			
+			(yyval)->code = (yyvsp[0])->code;
+			
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
 			}
-#line 2140 "y.tab.c" /* yacc.c:1646  */
+#line 2171 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 740 "1505010.y" /* yacc.c:1646  */
+#line 771 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d parameter_list : parameter_list COMMA type_specifier ID \n\n", line_num);
 			fprintf(fp2, "At line no: %d parameter_list : parameter_list COMMA type_specifier ID \n\n", line_num);
@@ -2174,11 +2205,11 @@ yyreduce:
 			$$->setType("parameter_list");
 			*/
 			}
-#line 2178 "y.tab.c" /* yacc.c:1646  */
+#line 2209 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 773 "1505010.y" /* yacc.c:1646  */
+#line 804 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d parameter_list : parameter_list COMMA type_specifier \n\n", line_num);
 			fprintf(fp2, "At line no: %d parameter_list : parameter_list COMMA type_specifier \n\n", line_num);
@@ -2196,11 +2227,11 @@ yyreduce:
 			(yyval)->type = (yyvsp[-2])->type;
 			
 			}
-#line 2200 "y.tab.c" /* yacc.c:1646  */
+#line 2231 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 790 "1505010.y" /* yacc.c:1646  */
+#line 821 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d parameter_list : type_specifier ID \n\n", line_num);
 			fprintf(fp2, "At line no: %d parameter_list : type_specifier ID \n\n", line_num);
@@ -2233,11 +2264,11 @@ yyreduce:
 			(yyval)->type = (yyvsp[-1])->type;
 			
 			}
-#line 2237 "y.tab.c" /* yacc.c:1646  */
+#line 2268 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 822 "1505010.y" /* yacc.c:1646  */
+#line 853 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d parameter_list : type_specifier\n\n", line_num);
 			fprintf(fp2, "At line no: %d parameter_list : type_specifier\n\n", line_num);
@@ -2251,18 +2282,18 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			}
-#line 2255 "y.tab.c" /* yacc.c:1646  */
+#line 2286 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 838 "1505010.y" /* yacc.c:1646  */
+#line 869 "1505010.y" /* yacc.c:1646  */
     { //fprintf(fp2,"found LCURL\n"); /*if(flag==0) {table->enterScope(fp2);}*/ 
 			}
-#line 2262 "y.tab.c" /* yacc.c:1646  */
+#line 2293 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 840 "1505010.y" /* yacc.c:1646  */
+#line 871 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d compound_statement : LCURL statements RCURL \n\n", line_num);
 			fprintf(fp2, "At line no: %d compound_statement : LCURL statements RCURL \n\n", line_num);
@@ -2292,19 +2323,21 @@ yyreduce:
 			//table->printAllScope(fp2);
 			//table->exitScope(fp2);
 			
+			(yyval)->code = (yyvsp[-1])->code;
+			
 			}
-#line 2297 "y.tab.c" /* yacc.c:1646  */
+#line 2330 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 870 "1505010.y" /* yacc.c:1646  */
+#line 903 "1505010.y" /* yacc.c:1646  */
     { //fprintf(fp2,"found LCURL\n"); /*if(flag==0) {table->enterScope(fp2);}*/
  		    }
-#line 2304 "y.tab.c" /* yacc.c:1646  */
+#line 2337 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 871 "1505010.y" /* yacc.c:1646  */
+#line 904 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d compound_statement : LCURL RCURL \n\n", line_num);
 			fprintf(fp2, "At line no: %d compound_statement : LCURL RCURL \n\n", line_num);
@@ -2325,11 +2358,11 @@ yyreduce:
 			flag=0;
 			
 			}
-#line 2329 "y.tab.c" /* yacc.c:1646  */
+#line 2362 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 893 "1505010.y" /* yacc.c:1646  */
+#line 926 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d var_declaration : type_specifier declaration_list SEMICOLON\n\n", line_num);
 			fprintf(fp2, "At line no: %d var_declaration : type_specifier declaration_list SEMICOLON\n\n", line_num);
@@ -2414,11 +2447,11 @@ yyreduce:
 			errFlag=0;
 			
 			}
-#line 2418 "y.tab.c" /* yacc.c:1646  */
+#line 2451 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 979 "1505010.y" /* yacc.c:1646  */
+#line 1012 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d type_specifier : INT\n\n", line_num);
 			fprintf(fp2, "At line no: %d type_specifier : INT\n\n", line_num);
@@ -2429,11 +2462,11 @@ yyreduce:
 			(yyval)->type = "INT";
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2433 "y.tab.c" /* yacc.c:1646  */
+#line 2466 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 989 "1505010.y" /* yacc.c:1646  */
+#line 1022 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d type_specifier : FLOAT\n\n", line_num);
 			fprintf(fp2, "At line no: %d type_specifier : FLOAT\n\n", line_num);
@@ -2444,11 +2477,11 @@ yyreduce:
 			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2448 "y.tab.c" /* yacc.c:1646  */
+#line 2481 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 999 "1505010.y" /* yacc.c:1646  */
+#line 1032 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d type_specifier : VOID\n\n", line_num);
 			fprintf(fp2, "At line no: %d type_specifier : VOID\n\n", line_num);
@@ -2460,11 +2493,11 @@ yyreduce:
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 	
 			}
-#line 2464 "y.tab.c" /* yacc.c:1646  */
+#line 2497 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 1012 "1505010.y" /* yacc.c:1646  */
+#line 1045 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d declaration_list : declaration_list COMMA ID \n\n", line_num);
 			fprintf(fp2, "At line no: %d declaration_list : declaration_list COMMA ID \n\n", line_num);
@@ -2527,11 +2560,11 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			}
-#line 2531 "y.tab.c" /* yacc.c:1646  */
+#line 2564 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 1074 "1505010.y" /* yacc.c:1646  */
+#line 1107 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d declaration_list : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD \n\n", line_num);
 			fprintf(fp2, "At line no: %d declaration_list : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD \n\n", line_num);
@@ -2585,11 +2618,11 @@ yyreduce:
 			}
 			
 			}
-#line 2589 "y.tab.c" /* yacc.c:1646  */
+#line 2622 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 1127 "1505010.y" /* yacc.c:1646  */
+#line 1160 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d declaration_list : ID\n\n", line_num);
 			fprintf(fp2, "At line no: %d declaration_list : ID\n\n", line_num);
@@ -2619,11 +2652,11 @@ yyreduce:
 			
 			
 			}
-#line 2623 "y.tab.c" /* yacc.c:1646  */
+#line 2656 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 1156 "1505010.y" /* yacc.c:1646  */
+#line 1189 "1505010.y" /* yacc.c:1646  */
     { /*SymbolInfo *s = table->lookUp($1->getName().c_str());
 			if(!s->getName().compare("-1") )
 			{	
@@ -2658,11 +2691,11 @@ yyreduce:
 			}
 			
 			}
-#line 2662 "y.tab.c" /* yacc.c:1646  */
+#line 2695 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 1189 "1505010.y" /* yacc.c:1646  */
+#line 1222 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d declaration_list : ID LTHIRD CONST_INT RTHIRD\n\n", line_num);
 			fprintf(fp2, "At line no: %d declaration_list : ID LTHIRD CONST_INT RTHIRD\n\n", line_num);
@@ -2679,11 +2712,11 @@ yyreduce:
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			
 			}
-#line 2683 "y.tab.c" /* yacc.c:1646  */
+#line 2716 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 1207 "1505010.y" /* yacc.c:1646  */
+#line 1240 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statements : statement\n\n", line_num);
 			fprintf(fp2, "At line no: %d statements : statement\n\n", line_num);
@@ -2696,11 +2729,11 @@ yyreduce:
 			fprintf(fp2, "%s\n\n", (yyvsp[0])->getName().c_str());
 			
 			}
-#line 2700 "y.tab.c" /* yacc.c:1646  */
+#line 2733 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 1219 "1505010.y" /* yacc.c:1646  */
+#line 1252 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statements : statements statement\n\n", line_num);
 			fprintf(fp2, "At line no: %d statements : statements statement\n\n", line_num);
@@ -2714,12 +2747,17 @@ yyreduce:
 			(yyval)->setName(allConcat);
 			//$$->setType("statements");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			
+			(yyval)->code += (yyvsp[0])->code;
+			
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
 			}
-#line 2719 "y.tab.c" /* yacc.c:1646  */
+#line 2757 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 1235 "1505010.y" /* yacc.c:1646  */
+#line 1273 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : var_declaration\n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : var_declaration\n\n", line_num);
@@ -2728,11 +2766,11 @@ yyreduce:
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2732 "y.tab.c" /* yacc.c:1646  */
+#line 2770 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 1243 "1505010.y" /* yacc.c:1646  */
+#line 1281 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : expression_statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : expression_statement \n\n", line_num);
@@ -2741,11 +2779,11 @@ yyreduce:
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2745 "y.tab.c" /* yacc.c:1646  */
+#line 2783 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 1251 "1505010.y" /* yacc.c:1646  */
+#line 1289 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : compound_statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : compound_statement \n\n", line_num);
@@ -2754,11 +2792,11 @@ yyreduce:
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2758 "y.tab.c" /* yacc.c:1646  */
+#line 2796 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 1259 "1505010.y" /* yacc.c:1646  */
+#line 1297 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : FOR LPAREN expression_statement expression_statement expression RPAREN statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : FOR LPAREN expression_statement expression_statement expression RPAREN statement \n\n", line_num);
@@ -2777,11 +2815,11 @@ yyreduce:
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2781 "y.tab.c" /* yacc.c:1646  */
+#line 2819 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 1277 "1505010.y" /* yacc.c:1646  */
+#line 1315 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
@@ -2797,12 +2835,24 @@ yyreduce:
 			(yyval)->setName(allConcat);
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			
+			string label=newLabel();
+			(yyval)->code+="\tmov ax, "+(yyvsp[-2])->getName()+"\n";
+			(yyval)->code+="\tcmp ax, 0\n";
+			(yyval)->code+="\tje "+label+"\n";
+			(yyval)->code+=(yyvsp[0])->code;
+			(yyval)->code+=label+":\n";
+			
+			//codeAsm << $$->code.c_str() << endl;
+			
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
 			}
-#line 2802 "y.tab.c" /* yacc.c:1646  */
+#line 2852 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 1293 "1505010.y" /* yacc.c:1646  */
+#line 1343 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
@@ -2821,11 +2871,11 @@ yyreduce:
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2825 "y.tab.c" /* yacc.c:1646  */
+#line 2875 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 1311 "1505010.y" /* yacc.c:1646  */
+#line 1361 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : WHILE LPAREN expression RPAREN statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : WHILE LPAREN expression RPAREN statement \n\n", line_num);
@@ -2842,11 +2892,11 @@ yyreduce:
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 2846 "y.tab.c" /* yacc.c:1646  */
+#line 2896 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 1327 "1505010.y" /* yacc.c:1646  */
+#line 1377 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : PRINTLN LPAREN ID RPAREN SEMICOLON\n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : PRINTLN LPAREN ID RPAREN SEMICOLON\n\n", line_num);
@@ -2867,11 +2917,11 @@ yyreduce:
 			errFlag=0;
 			
 			}
-#line 2871 "y.tab.c" /* yacc.c:1646  */
+#line 2921 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 1347 "1505010.y" /* yacc.c:1646  */
+#line 1397 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d statement : RETURN expression SEMICOLON \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : RETURN expression SEMICOLON \n\n", line_num);
@@ -2897,11 +2947,11 @@ yyreduce:
 			//errFlag=0;
 			
 			}
-#line 2901 "y.tab.c" /* yacc.c:1646  */
+#line 2951 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 1374 "1505010.y" /* yacc.c:1646  */
+#line 1424 "1505010.y" /* yacc.c:1646  */
     {
 			
 			//printf("At line no: %d expression_statement : SEMICOLON\n\n", line_num);
@@ -2919,11 +2969,11 @@ yyreduce:
 			errFlag=0;
 			
 			}
-#line 2923 "y.tab.c" /* yacc.c:1646  */
+#line 2973 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 1392 "1505010.y" /* yacc.c:1646  */
+#line 1442 "1505010.y" /* yacc.c:1646  */
     {
 			
 			//printf("At line no: %d expression_statement : expression SEMICOLON\n\n", line_num);
@@ -2943,11 +2993,11 @@ yyreduce:
 			errFlag=0;
 			
 			}
-#line 2947 "y.tab.c" /* yacc.c:1646  */
+#line 2997 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 1413 "1505010.y" /* yacc.c:1646  */
+#line 1463 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d variable : ID \n\n", line_num);
 			fprintf(fp2, "At line no: %d variable : ID \n\n", line_num);
@@ -2981,11 +3031,11 @@ yyreduce:
 			//fprintf(fp2,"%s(%s)\n\n",$$->getName().c_str(), s->type.c_str());
 			
 			}
-#line 2985 "y.tab.c" /* yacc.c:1646  */
+#line 3035 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 1446 "1505010.y" /* yacc.c:1646  */
+#line 1496 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d variable : ID LTHIRD expression RTHIRD \n\n", line_num);
 			fprintf(fp2, "At line no: %d variable : ID LTHIRD expression RTHIRD \n\n", line_num);
@@ -3035,12 +3085,18 @@ yyreduce:
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			//fprintf(fp2,"%s (%s) \n\n",$$->getName().c_str(), s->type.c_str());
 			
+			(yyval)->code=(yyvsp[-1])->code+"\tmov bx, " +(yyvsp[-1])->getName() +"\n\tadd bx, bx\n";
+			//delete $3;
+			//codeAsm << $$->code.c_str() <<endl;
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
+			
 			}
-#line 3040 "y.tab.c" /* yacc.c:1646  */
+#line 3096 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 1498 "1505010.y" /* yacc.c:1646  */
+#line 1554 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d expression : logic_expression \n\n", line_num);
 			fprintf(fp2, "At line no: %d expression : logic_expression \n\n", line_num);
@@ -3054,11 +3110,11 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			}
-#line 3058 "y.tab.c" /* yacc.c:1646  */
+#line 3114 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 1511 "1505010.y" /* yacc.c:1646  */
+#line 1567 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d expression : variable ASSIGNOP logic_expression \n\n", line_num);
 			fprintf(fp2, "At line no: %d expression : variable ASSIGNOP logic_expression \n\n", line_num);
@@ -3066,6 +3122,8 @@ yyreduce:
 			//printf("%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str());
 			
 			//fprintf(fp2, "\n\n vartype: (%s) %s, exprs_type:(%s) %s\n\n", $1->getName().c_str(), varType.c_str(),  $3->getName().c_str(),logic_expressionType.c_str());
+			
+			string name = "";
 			
 			size_t found = (yyvsp[-2])->getName().find("[");
 			if(found==string::npos)
@@ -3132,6 +3190,9 @@ yyreduce:
 					err.append(logic_expressionType);
 					printError(err, line_num);
 				}*/
+				
+				name = (yyvsp[-2])->getName();
+				
 			}
 			else
 			{
@@ -3148,7 +3209,39 @@ yyreduce:
 					printError(err, line_num);
 				}
 				
+				vector <string> tokens;
+				stringstream check1((yyvsp[-2])->getName().c_str());
+				string intermediate;
+				string intermediate2;
+		
+				while(getline(check1, intermediate, '[')){
+					stringstream check2(intermediate);
+					string intermediate2;
+					if(getline(check2, intermediate2, ']')){
+						tokens.push_back(intermediate2);
+					}
+					else { tokens.push_back(intermediate); }
+				}
+				
+				
+				name = tokens[0];
+				
 			}
+			
+			(yyval) = (yyvsp[-2]);
+			
+			(yyval)->code=(yyvsp[0])->code+(yyvsp[-2])->code;
+			(yyval)->code+="\tmov ax, "+(yyvsp[0])->getName()+"\n";
+			if((yyval)->type=="INT_ARRAY"){ 
+				(yyval)->code+= "\tmov "+ name +"[bx], ax\n";	
+			}
+			else{
+				(yyval)->code+= "\tmov "+(yyvsp[-2])->getName()+", ax\n";
+			}
+			//delete $3;
+			
+			//codeAsm << $$->code.c_str() << endl;
+			
 			
 			
 			string allConcat ;
@@ -3161,12 +3254,14 @@ yyreduce:
 			//$$->setType("expression");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
 			}
-#line 3166 "y.tab.c" /* yacc.c:1646  */
+#line 3261 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 1616 "1505010.y" /* yacc.c:1646  */
+#line 1711 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d logic_expression : rel_expression \n\n", line_num);
 			fprintf(fp2, "At line no: %d logic_expression : rel_expression \n\n", line_num);
@@ -3179,11 +3274,11 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			}
-#line 3183 "y.tab.c" /* yacc.c:1646  */
+#line 3278 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 1628 "1505010.y" /* yacc.c:1646  */
+#line 1723 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d logic_expression : rel_expression LOGICOP rel_expression \n\n", line_num);
 			fprintf(fp2, "At line no: %d logic_expression : rel_expression LOGICOP rel_expression \n\n", line_num);
@@ -3205,6 +3300,47 @@ yyreduce:
 				(yyval)->type = (yyvsp[-2])->type;
 			}
 			
+			(yyval)->code+=(yyvsp[0])->code;
+			(yyval)->code+="\tmov ax, " + (yyvsp[-2])->getName()+"\n";
+			(yyval)->code+="\tmov bx, " + (yyvsp[0])->getName()+"\n";
+			string temp=newTemp();
+			string label1 = newLabel(); // ELSE
+			string label2 = newLabel(); // END
+					
+			if((yyvsp[-1])->getName()=="&&"){
+				/* 
+				Check whether both operands value is 1. If both are one set value of a temporary variable to 1
+				otherwise 0
+				*/
+				
+				(yyval)->code += "\tcmp ax, 0\n";
+				(yyval)->code += "\tje " + label1 + "\n";
+				(yyval)->code += "\tcmp bx, 0\n";
+				(yyval)->code += "\tje " + label1 + "\n"; // jump ELSE
+				(yyval)->code += "\tmov " + temp + ", 1\n";
+				(yyval)->code += "\tjmp " + label2 + "\n"; // jump END
+				(yyval)->code += label1 + " : \n\tmov " + temp + ", 0\n";
+				(yyval)->code += label2 + " : \n";
+				
+			}
+			else if((yyvsp[-1])->getName()=="||"){
+			
+				// label1 = TRUE;
+				//label2 = END;
+				
+				(yyval)->code += "\tcmp ax, 0\n";
+				(yyval)->code += "\tjne " + label1 + "\n"; // jump TRUE
+				(yyval)->code += "\tcmp bx, 0\n"; // first variable found false...
+				(yyval)->code += "\tjne " + label1 + "\n"; // jump TRUE
+				(yyval)->code += "\tmov " + temp + ", 0\n"; // false....
+				(yyval)->code += "\tjmp " + label2 + "\n"; // jump END
+				(yyval)->code += label1 + " : \n\tmov " + temp + ", 1\n";
+				(yyval)->code += label2 + " : \n";
+				
+				
+			}
+			//delete $3;
+			
 			
 			string allConcat ;
 			
@@ -3222,12 +3358,21 @@ yyreduce:
 			
 			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			
+			
+			
+			(yyval)->setName(temp);
+			
+			//codeAsm << $$->code.c_str() <<endl;
+			
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
 			}
-#line 3227 "y.tab.c" /* yacc.c:1646  */
+#line 3372 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 1669 "1505010.y" /* yacc.c:1646  */
+#line 1814 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d rel_expression : simple_expression \n\n", line_num);
 			fprintf(fp2, "At line no: %d rel_expression : simple_expression \n\n", line_num);
@@ -3239,28 +3384,70 @@ yyreduce:
 			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 3243 "y.tab.c" /* yacc.c:1646  */
+#line 3388 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 1680 "1505010.y" /* yacc.c:1646  */
+#line 1825 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d rel_expression : simple_expression RELOP simple_expression \n\n", line_num);
 			fprintf(fp2, "At line no: %d rel_expression : simple_expression RELOP simple_expression \n\n", line_num);
 			
 			//printf("%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str());
 			
+			if((yyvsp[-2])->type!="FLOAT")
+			{
+				(yyvsp[-2])->type = "INT";
+			}
+			if((yyvsp[0])->type!="FLOAT")
+			{
+				(yyvsp[0])->type = "INT";
+			}
 			
-			if((yyvsp[-2])->type.compare((yyvsp[0])->type))
+			
+			/*if($1->type.compare($3->type))
 			{
 				string err = "Type Mismatch: Both side of RELOP should be same type";
 				printError(err, line_num);
 			}
 			else
 			{
-				(yyval)->setType((yyvsp[-2])->getType());
-				(yyval)->type = (yyvsp[-2])->type;
+				$$->setType($1->getType());
+				$$->type = $1->type;
+			}*/
+			
+			
+			(yyval)->code+=(yyvsp[0])->code;
+			(yyval)->code+="\tmov ax, " + (yyvsp[-2])->getName()+"\n";
+			(yyval)->code+="\tcmp ax, " + (yyvsp[0])->getName()+"\n";
+			string temp=newTemp();
+			string label1=newLabel();
+			string label2=newLabel();
+			if((yyvsp[-1])->getName()=="<"){
+				(yyval)->code+="\tjl " + label1+"\n";
 			}
+			else if((yyvsp[-1])->getName()=="<="){
+				(yyval)->code+="\tjle " + label1+"\n";
+			}
+			else if((yyvsp[-1])->getName()==">"){
+				(yyval)->code+="\tjg " + label1+"\n";
+			}
+			else if((yyvsp[-1])->getName()==">="){
+				(yyval)->code+="\tjge " + label1+"\n";
+			}
+			else if((yyvsp[-1])->getName()=="=="){
+				(yyval)->code+="\tje " + label1+"\n";
+			}
+			else{
+				(yyval)->code+="\tjne " + label1+"\n";
+			}
+			
+			(yyval)->code+="\tmov "+temp +", 0\n";
+			(yyval)->code+="\tjmp "+label2 +"\n";
+			(yyval)->code+=label1+":\n\tmov "+temp+", 1\n";
+			(yyval)->code+=label2+":\n";
+			
+			
 			
 			string allConcat ;
 			
@@ -3270,22 +3457,24 @@ yyreduce:
 			(yyval)->setName(allConcat);
 			//$$->setType("rel_expression");
 			
-			
-			
 			string concatType = (yyvsp[-2])->getType().c_str();
 			concatType.append(" ");
 			concatType.append((yyvsp[0])->getType().c_str());
 			
-			
-			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			
+			(yyval)->setName(temp);
+			//delete $3;
+			
+			//codeAsm << $$->code.c_str() << endl;
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
 			}
-#line 3285 "y.tab.c" /* yacc.c:1646  */
+#line 3474 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 1719 "1505010.y" /* yacc.c:1646  */
+#line 1908 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d simple_expression : term\n\n", line_num);
 			fprintf(fp2, "At line no: %d simple_expression : term\n\n", line_num);
@@ -3299,11 +3488,11 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			}
-#line 3303 "y.tab.c" /* yacc.c:1646  */
+#line 3492 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 1732 "1505010.y" /* yacc.c:1646  */
+#line 1921 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d simple_expression : simple_expression ADDOP term \n\n", line_num);
 			fprintf(fp2, "At line no: %d simple_expression : simple_expression ADDOP term \n\n", line_num);
@@ -3343,11 +3532,36 @@ yyreduce:
 				$$->type = $1->type;
 			}*/
 			
+			(yyval) = (yyvsp[-2]);
+			
+			(yyval)->code+=(yyvsp[0])->code;
+			(yyval)->code += "\tmov ax, "+ (yyvsp[-2])->getName() +"\n";
+			(yyval)->code += "\tmov bx, "+ (yyvsp[0])->getName() +"\n";
+			// move one of the operands to a register, perform addition or subtraction with the other operand and move the result in a temporary variable  
+			string temp=newTemp();
+			if((yyvsp[-1])->getName()=="+"){
+				(yyval)->code += "\tadd ax, bx\n";
+				(yyval)->code += "\tmov "+ temp + ", ax\n";
+			}
+			else{
+				(yyval)->code += "\tsub ax, bx\n";
+				(yyval)->code += "\tmov "+ temp + ", ax\n";
+			}
+			//delete $3;
+			//cout <<$$->code.c_str() << endl;
+			//codeAsm << $$->code.c_str() << endl;
+			
+			
 			string allConcat ;
 			
 			allConcat.append((yyvsp[-2])->getName().c_str());
 			allConcat.append((yyvsp[-1])->getName().c_str());
 			allConcat.append((yyvsp[0])->getName().c_str());
+			
+			
+			//string dollar1 = $1->getName();
+			
+			//$$ changed so did $1
 			(yyval)->setName(allConcat);
 			//$$->setType("simple_expression");
 			//fprintf(fp2,"%s\n\n",$$->getName().c_str());
@@ -3360,15 +3574,18 @@ yyreduce:
 			
 			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			
+			(yyval)->setName(temp);
 			
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			}
-#line 3368 "y.tab.c" /* yacc.c:1646  */
+#line 3585 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 1794 "1505010.y" /* yacc.c:1646  */
+#line 2011 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d term : unary_expression\n\n", line_num);
 			fprintf(fp2, "At line no: %d term : unary_expression\n\n", line_num);
@@ -3380,11 +3597,11 @@ yyreduce:
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			}
-#line 3384 "y.tab.c" /* yacc.c:1646  */
+#line 3601 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 1805 "1505010.y" /* yacc.c:1646  */
+#line 2022 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d term : term MULOP unary_expression\n\n", line_num);
 			fprintf(fp2, "At line no: %d term : term MULOP unary_expression\n\n", line_num);
@@ -3479,6 +3696,30 @@ yyreduce:
 				(yyval)->type = a;
 			}
 			
+			//string concatType = $1->getType().c_str();
+			//concatType.append(" ");
+			//concatType.append($3->getType().c_str());
+			
+			(yyval)->code += (yyvsp[0])->code;
+			(yyval)->code += "\tmov ax, "+ (yyvsp[-2])->getName()+"\n";
+			(yyval)->code += "\tmov bx, "+ (yyvsp[0])->getName() +"\n";
+			string temp=newTemp();
+			if((yyvsp[-1])->getName()=="*"){
+				(yyval)->code += "\tmul bx\n";
+				(yyval)->code += "\tmov "+ temp + ", ax\n";
+			}
+			else if((yyvsp[-1])->getName()=="/"){
+				(yyval)->code +="\txor dx, dx\n";
+				(yyval)->code += "\tdiv bx\n";
+				(yyval)->code += "\tmov "+temp+", al\n"; // 8 bit quotient
+				// clear dx, perform 'div bx' and mov ax to temp
+			}
+			else{
+				(yyval)->code +="\txor dx, dx\n";
+				(yyval)->code += "\tdiv bx\n";
+				(yyval)->code += "\tmov "+temp+", ah\n"; // 8 bit remainder
+				// clear dx, perform 'div bx' and mov dx to temp
+			}
 			
 			string allConcat ;
 			
@@ -3490,20 +3731,20 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->getType().c_str());
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			
+			(yyval)->setName(temp);
+			cout << endl << (yyval)->code.c_str() << endl;
 			
-			
-			//string concatType = $1->getType().c_str();
-			//concatType.append(" ");
-			//concatType.append($3->getType().c_str());
+			//codeAsm << $$->code.c_str() << endl;
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
 			
 			
 			
 			}
-#line 3503 "y.tab.c" /* yacc.c:1646  */
+#line 3744 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 1921 "1505010.y" /* yacc.c:1646  */
+#line 2162 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d unary_expression : ADDOP unary_expression  \n\n", line_num);
 			fprintf(fp2, "At line no: %d unary_expression : ADDOP unary_expression  \n\n", line_num);
@@ -3520,11 +3761,11 @@ yyreduce:
 			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 3524 "y.tab.c" /* yacc.c:1646  */
+#line 3765 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 1937 "1505010.y" /* yacc.c:1646  */
+#line 2178 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d unary_expression : NOT unary_expression\n\n", line_num);
 			fprintf(fp2, "At line no: %d unary_expression : NOT unary_expression\n\n", line_num);
@@ -3542,18 +3783,20 @@ yyreduce:
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			
 			string temp=newTemp();
-			(yyval)->code="mov ax, " + (yyvsp[0])->getName() + "\n";
-			(yyval)->code+="not ax\n";
-			(yyval)->code+="mov "+temp+", ax";
+			(yyval)->code="\tmov ax, " + (yyvsp[0])->getName() + "\n";
+			(yyval)->code+="\tnot ax\n";
+			(yyval)->code+="\tmov "+temp+", ax";
 						
-			cout << (yyval)->code.c_str();
+			//cout << $$->code.c_str();
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			//codeAsm << $$->code.c_str();
 			
 			}
-#line 3553 "y.tab.c" /* yacc.c:1646  */
+#line 3796 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 1961 "1505010.y" /* yacc.c:1646  */
+#line 2204 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d unary_expression : factor \n\n", line_num);
 			fprintf(fp2, "At line no: %d unary_expression : factor \n\n", line_num);
@@ -3566,11 +3809,11 @@ yyreduce:
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			// fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			}
-#line 3570 "y.tab.c" /* yacc.c:1646  */
+#line 3813 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 1975 "1505010.y" /* yacc.c:1646  */
+#line 2218 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : variable\n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : variable\n\n", line_num);
@@ -3584,24 +3827,47 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			if((yyval)->type=="INT_ARRAY"){
+				
+				vector <string> tokens;
+				stringstream check1((yyvsp[0])->getName().c_str());
+				string intermediate;
+				string intermediate2;
+		
+				while(getline(check1, intermediate, '[')){
+					stringstream check2(intermediate);
+					string intermediate2;
+					if(getline(check2, intermediate2, ']')){
+						tokens.push_back(intermediate2);
+					}
+					else { tokens.push_back(intermediate); }
+				}
+				
+				string name = tokens[0];
+				
+				
 				string temp= newTemp();
-				(yyval)->code+="mov ax, " + (yyvsp[0])->getName() + "[bx]\n";
-				(yyval)->code+= "mov " + temp + ", ax\n";
+				(yyval)->code+="\tmov ax, " + name + "[bx]\n";
+				(yyval)->code+= "\tmov " + temp + ", ax\n";
 				(yyval)->setName(temp);
 			}
 			else{
-				
+				string temp = newTemp();
+				(yyval)->code+="\tmov ax, " + (yyvsp[0])->getName()+"\n";
+				(yyval)->code+= "\tmov " + temp + ", ax\n";
+				(yyval)->setName(temp);
+				//$$->code+="mov ax, 
 			}
 			
-			//cout << $$->code.c_str();
-			
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			//codeAsm << $$->code.c_str();
+			//cout <<  $$->code.c_str() << "\n" << $$->type.c_str() ;
 			
 			}
-#line 3601 "y.tab.c" /* yacc.c:1646  */
+#line 3867 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 2001 "1505010.y" /* yacc.c:1646  */
+#line 2267 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : ID LPAREN argument_list RPAREN\n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : ID LPAREN argument_list RPAREN\n\n", line_num);
@@ -3740,11 +4006,11 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->getType().c_str());
 			
 			}
-#line 3744 "y.tab.c" /* yacc.c:1646  */
+#line 4010 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 2139 "1505010.y" /* yacc.c:1646  */
+#line 2405 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : LPAREN expression RPAREN \n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : LPAREN expression RPAREN \n\n", line_num);
@@ -3762,12 +4028,15 @@ yyreduce:
 			(yyval)->type = (yyvsp[-1])->type;
 			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			
+			(yyval) = (yyvsp[-1]);
+			
 			}
-#line 3767 "y.tab.c" /* yacc.c:1646  */
+#line 4036 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 2157 "1505010.y" /* yacc.c:1646  */
+#line 2426 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : CONST_INT \n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : CONST_INT \n\n", line_num);
@@ -3777,11 +4046,11 @@ yyreduce:
 			(yyval)->type = "INT";
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 3781 "y.tab.c" /* yacc.c:1646  */
+#line 4050 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 2166 "1505010.y" /* yacc.c:1646  */
+#line 2435 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : CONST_FLOAT \n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : CONST_FLOAT \n\n", line_num);
@@ -3791,11 +4060,11 @@ yyreduce:
 			(yyval)->type = "FLOAT";
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 3795 "y.tab.c" /* yacc.c:1646  */
+#line 4064 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 2175 "1505010.y" /* yacc.c:1646  */
+#line 2444 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : CONST_CHAR \n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : CONST_CHAR \n\n", line_num);
@@ -3805,11 +4074,11 @@ yyreduce:
 			(yyval)->type = "CHAR";
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 3809 "y.tab.c" /* yacc.c:1646  */
+#line 4078 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 2184 "1505010.y" /* yacc.c:1646  */
+#line 2453 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : variable INCOP \n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : variable INCOP \n\n", line_num);
@@ -3835,12 +4104,27 @@ yyreduce:
 			allConcat.append((yyvsp[0])->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			
+			if((yyvsp[-1])->type=="INT_ARRAY")
+			{
+			
 			}
-#line 3840 "y.tab.c" /* yacc.c:1646  */
+			else
+			{
+				string temp=newTemp();
+				(yyval)->code="\tmov ax, " + (yyvsp[-1])->getName() + "\n";
+				(yyval)->code+="\tinc ax\n";
+				(yyval)->code+="\tmov "+temp+", ax";
+			
+			}
+			
+			
+			}
+#line 4124 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 2210 "1505010.y" /* yacc.c:1646  */
+#line 2494 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d factor : variable DECOP \n\n", line_num);
 			fprintf(fp2, "At line no: %d factor : variable DECOP \n\n", line_num);
@@ -3868,12 +4152,31 @@ yyreduce:
 			allConcat.append((yyvsp[0])->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
+			
+			if((yyvsp[-1])->type=="INT_ARRAY")
+			{
+			
 			}
-#line 3873 "y.tab.c" /* yacc.c:1646  */
+			else
+			{
+				string temp=newTemp();
+				(yyval)->code="\tmov ax, " + (yyvsp[-1])->getName() + "\n";
+				(yyval)->code+="\tdec ax\n";
+				(yyval)->code+="\tmov "+temp+", ax";
+			
+			}
+						
+			//cout << $$->code.c_str();
+			fprintf(fp2, "%s\n\n", (yyval)->code.c_str());
+			//codeAsm << $$->code.c_str();
+			
+			
+			}
+#line 4176 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 2240 "1505010.y" /* yacc.c:1646  */
+#line 2543 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d argument_list : arguments\n\n", line_num);
 			fprintf(fp2, "At line no: %d argument_list : arguments\n\n", line_num);
@@ -3887,21 +4190,21 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str() ,$$->getType().c_str());
 			
 			}
-#line 3891 "y.tab.c" /* yacc.c:1646  */
+#line 4194 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 2254 "1505010.y" /* yacc.c:1646  */
+#line 2557 "1505010.y" /* yacc.c:1646  */
     {
 			  	(yyval) = new SymbolInfo("", "");
 			  	(yyval)->setName("");
 			  	
 			  }
-#line 3901 "y.tab.c" /* yacc.c:1646  */
+#line 4204 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 2261 "1505010.y" /* yacc.c:1646  */
+#line 2564 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d arguments : arguments COMMA logic_expression\n\n", line_num);
 			fprintf(fp2, "At line no: %d arguments : arguments COMMA logic_expression\n\n", line_num);
@@ -3934,11 +4237,11 @@ yyreduce:
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->getType().c_str());
 			
 			}
-#line 3938 "y.tab.c" /* yacc.c:1646  */
+#line 4241 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 2293 "1505010.y" /* yacc.c:1646  */
+#line 2596 "1505010.y" /* yacc.c:1646  */
     {
 			//printf("At line no: %d arguments : logic_expression\n\n", line_num);
 			fprintf(fp2, "At line no: %d arguments : logic_expression\n\n", line_num);
@@ -3950,11 +4253,11 @@ yyreduce:
 			
 			fprintf(fp2,"%s\n\n",(yyval)->getName().c_str());
 			}
-#line 3954 "y.tab.c" /* yacc.c:1646  */
+#line 4257 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 3958 "y.tab.c" /* yacc.c:1646  */
+#line 4261 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -4182,7 +4485,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 2307 "1505010.y" /* yacc.c:1906  */
+#line 2610 "1505010.y" /* yacc.c:1906  */
 
 
 int main(int argc,char *argv[])
@@ -4209,6 +4512,9 @@ int main(int argc,char *argv[])
 	
 	fp2= fopen(argv[2],"a");
 	fp3= fopen(argv[3],"a");
+	
+	codeAsm.open("code.asm");
+	
 	
 
 	yyin=fp;

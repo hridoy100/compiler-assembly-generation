@@ -31,6 +31,7 @@ public:
     vector<string> functionParameters;
     bool defined = false;
     string code;
+    int scope;
     SymbolInfo(){
 	code = "";
     }
@@ -61,6 +62,15 @@ public:
     {
         return Type;
     }
+    void setScope(int n)
+    {
+    	scope = n;
+    }
+    int getScope()
+    {
+    	return scope;
+    }
+    
 };
 
 
@@ -122,6 +132,7 @@ public:
         SymbolInfo *temp = new SymbolInfo;
         temp->setName(key);
         temp->setType(value);
+        temp->setScope(id);
 
         // Apply hash function to find index for given key
         int hashIndex = hashFunc1(key);

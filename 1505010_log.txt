@@ -1,0 +1,1432 @@
+At line no: 2 type_specifier : INT
+
+int
+
+New ScopeTable with id 2 created
+At line no: 3 type_specifier : INT
+
+int
+
+At line no: 3 declaration_list : ID LTHIRD CONST_INT RTHIRD
+
+a[2]
+
+At line no: 3 declaration_list : declaration_list COMMA ID 
+
+a[2],c
+
+At line no: 3 declaration_list : declaration_list COMMA ID 
+
+a[2],c,i
+
+At line no: 3 declaration_list : declaration_list COMMA ID 
+
+a[2],c,i,j
+
+At line no: 3 var_declaration : type_specifier declaration_list SEMICOLON
+
+int a[2],c,i,j;
+
+
+At line no: 3 statement : var_declaration
+
+int a[2],c,i,j;
+
+
+At line no: 3 statements : statement
+
+int a[2],c,i,j;
+
+
+At line no: 3 type_specifier : FLOAT
+
+float
+
+At line no: 3 declaration_list : ID
+
+d
+
+At line no: 3 var_declaration : type_specifier declaration_list SEMICOLON
+
+float d;
+
+
+At line no: 3 statement : var_declaration
+
+float d;
+
+
+At line no: 3 statements : statements statement
+
+int a[2],c,i,j;
+float d;
+
+
+
+
+At line no: 4 factor : CONST_INT 
+
+0
+
+At line no: 4 unary_expression : factor 
+
+0
+
+At line no: 4 term : unary_expression
+
+0
+
+At line no: 4 simple_expression : term
+
+0
+
+At line no: 4 rel_expression : simple_expression 
+
+0
+
+At line no: 4 logic_expression : rel_expression 
+
+0
+
+At line no: 4 expression : logic_expression 
+
+0
+
+At line no: 4 variable : ID LTHIRD expression RTHIRD 
+
+a[0]
+
+	mov bx, 0
+	add bx, bx
+
+
+At line no: 4 factor : CONST_INT 
+
+1
+
+At line no: 4 unary_expression : factor 
+
+1
+
+At line no: 4 term : unary_expression
+
+1
+
+At line no: 4 simple_expression : term
+
+1
+
+At line no: 4 rel_expression : simple_expression 
+
+1
+
+At line no: 4 logic_expression : rel_expression 
+
+1
+
+At line no: 4 expression : variable ASSIGNOP logic_expression 
+
+a[0]=1
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+
+
+At line no: 4 expression_statement : expression SEMICOLON
+
+a[0]=1;
+
+
+At line no: 4 statement : expression_statement 
+
+a[0]=1;
+
+
+At line no: 4 statements : statements statement
+
+int a[2],c,i,j;
+float d;
+a[0]=1;
+
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+
+
+At line no: 5 factor : CONST_INT 
+
+1
+
+At line no: 5 unary_expression : factor 
+
+1
+
+At line no: 5 term : unary_expression
+
+1
+
+At line no: 5 simple_expression : term
+
+1
+
+At line no: 5 rel_expression : simple_expression 
+
+1
+
+At line no: 5 logic_expression : rel_expression 
+
+1
+
+At line no: 5 expression : logic_expression 
+
+1
+
+At line no: 5 variable : ID LTHIRD expression RTHIRD 
+
+a[1]
+
+	mov bx, 1
+	add bx, bx
+
+
+At line no: 5 factor : CONST_INT 
+
+5
+
+At line no: 5 unary_expression : factor 
+
+5
+
+At line no: 5 term : unary_expression
+
+5
+
+At line no: 5 simple_expression : term
+
+5
+
+At line no: 5 rel_expression : simple_expression 
+
+5
+
+At line no: 5 logic_expression : rel_expression 
+
+5
+
+At line no: 5 expression : variable ASSIGNOP logic_expression 
+
+a[1]=5
+
+	mov bx, 1
+	add bx, bx
+	mov ax, 5
+	mov a[bx], ax
+
+
+At line no: 5 expression_statement : expression SEMICOLON
+
+a[1]=5;
+
+
+At line no: 5 statement : expression_statement 
+
+a[1]=5;
+
+
+At line no: 5 statements : statements statement
+
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+	mov bx, 1
+	add bx, bx
+	mov ax, 5
+	mov a[bx], ax
+
+
+At line no: 6 variable : ID 
+
+i
+
+At line no: 6 factor : CONST_INT 
+
+0
+
+At line no: 6 unary_expression : factor 
+
+0
+
+At line no: 6 term : unary_expression
+
+0
+
+At line no: 6 simple_expression : term
+
+0
+
+At line no: 6 rel_expression : simple_expression 
+
+0
+
+At line no: 6 logic_expression : rel_expression 
+
+0
+
+At line no: 6 expression : logic_expression 
+
+0
+
+At line no: 6 variable : ID LTHIRD expression RTHIRD 
+
+a[0]
+
+	mov bx, 0
+	add bx, bx
+
+
+At line no: 6 factor : variable
+
+a[0]
+
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+
+
+At line no: 6 unary_expression : factor 
+
+t0
+
+At line no: 6 term : unary_expression
+
+t0
+
+At line no: 6 simple_expression : term
+
+t0
+
+At line no: 6 factor : CONST_INT 
+
+1
+
+At line no: 6 unary_expression : factor 
+
+1
+
+At line no: 6 term : unary_expression
+
+1
+
+At line no: 6 simple_expression : term
+
+1
+
+At line no: 6 rel_expression : simple_expression 
+
+1
+
+At line no: 6 logic_expression : rel_expression 
+
+1
+
+At line no: 6 expression : logic_expression 
+
+1
+
+At line no: 6 variable : ID LTHIRD expression RTHIRD 
+
+a[1]
+
+	mov bx, 1
+	add bx, bx
+
+
+At line no: 6 factor : variable
+
+a[1]
+
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+
+
+At line no: 6 unary_expression : factor 
+
+t1
+
+At line no: 6 term : unary_expression
+
+t1
+
+At line no: 6 simple_expression : simple_expression ADDOP term 
+
+t0+t1
+
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+	mov ax, t0
+	mov bx, t1
+	add ax, bx
+	mov t2, ax
+
+
+At line no: 6 rel_expression : simple_expression 
+
+t2
+
+At line no: 6 logic_expression : rel_expression 
+
+t2
+
+At line no: 6 expression : variable ASSIGNOP logic_expression 
+
+i=t2
+
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+	mov ax, t0
+	mov bx, t1
+	add ax, bx
+	mov t2, ax
+	mov ax, t2
+	mov i, ax
+
+
+At line no: 6 expression_statement : expression SEMICOLON
+
+i=t2;
+
+
+At line no: 6 statement : expression_statement 
+
+i=t2;
+
+
+At line no: 6 statements : statements statement
+
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+	mov bx, 1
+	add bx, bx
+	mov ax, 5
+	mov a[bx], ax
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+	mov ax, t0
+	mov bx, t1
+	add ax, bx
+	mov t2, ax
+	mov ax, t2
+	mov i, ax
+
+
+At line no: 7 variable : ID 
+
+j
+
+At line no: 7 factor : CONST_INT 
+
+2
+
+At line no: 7 unary_expression : factor 
+
+2
+
+At line no: 7 term : unary_expression
+
+2
+
+At line no: 7 factor : CONST_INT 
+
+3
+
+At line no: 7 unary_expression : factor 
+
+3
+
+At line no: 7 term : term MULOP unary_expression
+
+2*3
+
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+
+
+At line no: 7 simple_expression : term
+
+t3
+
+At line no: 7 factor : CONST_INT 
+
+5
+
+At line no: 7 unary_expression : factor 
+
+5
+
+At line no: 7 term : unary_expression
+
+5
+
+At line no: 7 factor : CONST_INT 
+
+3
+
+At line no: 7 unary_expression : factor 
+
+3
+
+At line no: 7 term : term MULOP unary_expression
+
+5%3
+
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+
+
+At line no: 7 simple_expression : term
+
+t4
+
+At line no: 7 factor : CONST_INT 
+
+4
+
+At line no: 7 unary_expression : factor 
+
+4
+
+At line no: 7 term : unary_expression
+
+4
+
+At line no: 7 simple_expression : term
+
+4
+
+At line no: 7 rel_expression : simple_expression RELOP simple_expression 
+
+t4<4
+
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+
+
+At line no: 7 factor : CONST_INT 
+
+8
+
+At line no: 7 unary_expression : factor 
+
+8
+
+At line no: 7 term : unary_expression
+
+8
+
+At line no: 7 simple_expression : term
+
+8
+
+At line no: 7 rel_expression : simple_expression 
+
+8
+
+At line no: 7 logic_expression : rel_expression LOGICOP rel_expression 
+
+t5&&8
+
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+
+
+At line no: 7 expression : logic_expression 
+
+t6
+
+At line no: 7 factor : LPAREN expression RPAREN 
+
+(t6)
+
+At line no: 7 unary_expression : factor 
+
+t6
+
+At line no: 7 term : unary_expression
+
+t6
+
+At line no: 7 simple_expression : simple_expression ADDOP term 
+
+t3+t6
+
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+	mov ax, t3
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+
+
+At line no: 7 rel_expression : simple_expression 
+
+t7
+
+At line no: 7 factor : CONST_INT 
+
+2
+
+At line no: 7 unary_expression : factor 
+
+2
+
+At line no: 7 term : unary_expression
+
+2
+
+At line no: 7 simple_expression : term
+
+2
+
+At line no: 7 rel_expression : simple_expression 
+
+2
+
+At line no: 7 logic_expression : rel_expression LOGICOP rel_expression 
+
+t7||2
+
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+	mov ax, t3
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov bx, 2
+	cmp ax, 0
+	jne L4
+	cmp bx, 0
+	jne L4
+	mov t8, 0
+	jmp L5
+L4 : 
+	mov t8, 1
+L5 : 
+
+
+At line no: 7 expression : variable ASSIGNOP logic_expression 
+
+j=t8
+
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+	mov ax, t3
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov bx, 2
+	cmp ax, 0
+	jne L4
+	cmp bx, 0
+	jne L4
+	mov t8, 0
+	jmp L5
+L4 : 
+	mov t8, 1
+L5 : 
+	mov ax, t8
+	mov j, ax
+
+
+At line no: 7 expression_statement : expression SEMICOLON
+
+j=t8;
+
+
+At line no: 7 statement : expression_statement 
+
+j=t8;
+
+
+At line no: 7 statements : statements statement
+
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+j=t8;
+
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+	mov bx, 1
+	add bx, bx
+	mov ax, 5
+	mov a[bx], ax
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+	mov ax, t0
+	mov bx, t1
+	add ax, bx
+	mov t2, ax
+	mov ax, t2
+	mov i, ax
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+	mov ax, t3
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov bx, 2
+	cmp ax, 0
+	jne L4
+	cmp bx, 0
+	jne L4
+	mov t8, 0
+	jmp L5
+L4 : 
+	mov t8, 1
+L5 : 
+	mov ax, t8
+	mov j, ax
+
+
+At line no: 8 variable : ID 
+
+d
+
+At line no: 8 factor : CONST_INT 
+
+1
+
+At line no: 8 unary_expression : factor 
+
+1
+
+At line no: 8 term : unary_expression
+
+1
+
+At line no: 8 simple_expression : term
+
+1
+
+At line no: 8 rel_expression : simple_expression 
+
+1
+
+At line no: 8 logic_expression : rel_expression 
+
+1
+
+At line no: 8 arguments : logic_expression
+
+1
+
+At line no: 8 factor : CONST_INT 
+
+2
+
+At line no: 8 unary_expression : factor 
+
+2
+
+At line no: 8 term : unary_expression
+
+2
+
+At line no: 8 factor : CONST_INT 
+
+3
+
+At line no: 8 unary_expression : factor 
+
+3
+
+At line no: 8 term : term MULOP unary_expression
+
+2*3
+
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t9, ax
+
+
+At line no: 8 simple_expression : term
+
+t9
+
+At line no: 8 rel_expression : simple_expression 
+
+t9
+
+At line no: 8 logic_expression : rel_expression 
+
+t9
+
+At line no: 8 arguments : arguments COMMA logic_expression
+
+1,t9
+
+At line no: 8 argument_list : arguments
+
+1,t9
+
+At line no: 8 factor : ID LPAREN argument_list RPAREN
+
+var(1,t9)
+
+At line no: 8 unary_expression : factor 
+
+var(1,t9)
+
+At line no: 8 term : unary_expression
+
+var(1,t9)
+
+At line no: 8 simple_expression : term
+
+var(1,t9)
+
+At line no: 8 factor : CONST_FLOAT 
+
+3.5
+
+At line no: 8 unary_expression : factor 
+
+3.5
+
+At line no: 8 term : unary_expression
+
+3.5
+
+At line no: 8 factor : CONST_INT 
+
+2
+
+At line no: 8 unary_expression : factor 
+
+2
+
+At line no: 8 term : term MULOP unary_expression
+
+3.5*2
+
+	mov ax, 3.5
+	mov bx, 2
+	mul bx
+	mov t10, ax
+
+
+At line no: 8 simple_expression : simple_expression ADDOP term 
+
+var(1,t9)+t10
+
+	mov ax, 3.5
+	mov bx, 2
+	mul bx
+	mov t10, ax
+	mov ax, var(1,t9)
+	mov bx, t10
+	add ax, bx
+	mov t11, ax
+
+
+At line no: 8 rel_expression : simple_expression 
+
+t11
+
+At line no: 8 logic_expression : rel_expression 
+
+t11
+
+At line no: 8 expression : variable ASSIGNOP logic_expression 
+
+d=t11
+
+	mov ax, 3.5
+	mov bx, 2
+	mul bx
+	mov t10, ax
+	mov ax, var(1,t9)
+	mov bx, t10
+	add ax, bx
+	mov t11, ax
+	mov ax, t11
+	mov d, ax
+
+
+At line no: 8 expression_statement : expression SEMICOLON
+
+d=t11;
+
+
+At line no: 8 statement : expression_statement 
+
+d=t11;
+
+
+At line no: 8 statements : statements statement
+
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+j=t8;
+d=t11;
+
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+	mov bx, 1
+	add bx, bx
+	mov ax, 5
+	mov a[bx], ax
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+	mov ax, t0
+	mov bx, t1
+	add ax, bx
+	mov t2, ax
+	mov ax, t2
+	mov i, ax
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+	mov ax, t3
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov bx, 2
+	cmp ax, 0
+	jne L4
+	cmp bx, 0
+	jne L4
+	mov t8, 0
+	jmp L5
+L4 : 
+	mov t8, 1
+L5 : 
+	mov ax, t8
+	mov j, ax
+	mov ax, 3.5
+	mov bx, 2
+	mul bx
+	mov t10, ax
+	mov ax, var(1,t9)
+	mov bx, t10
+	add ax, bx
+	mov t11, ax
+	mov ax, t11
+	mov d, ax
+
+
+At line no: 9 factor : CONST_INT 
+
+0
+
+At line no: 9 unary_expression : factor 
+
+0
+
+At line no: 9 term : unary_expression
+
+0
+
+At line no: 9 simple_expression : term
+
+0
+
+At line no: 9 rel_expression : simple_expression 
+
+0
+
+At line no: 9 logic_expression : rel_expression 
+
+0
+
+At line no: 9 expression : logic_expression 
+
+0
+
+At line no: 9 statement : RETURN expression SEMICOLON 
+
+return 0;
+
+
+At line no: 9 statements : statements statement
+
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+j=t8;
+d=t11;
+return 0;
+
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+	mov bx, 1
+	add bx, bx
+	mov ax, 5
+	mov a[bx], ax
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+	mov ax, t0
+	mov bx, t1
+	add ax, bx
+	mov t2, ax
+	mov ax, t2
+	mov i, ax
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+	mov ax, t3
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov bx, 2
+	cmp ax, 0
+	jne L4
+	cmp bx, 0
+	jne L4
+	mov t8, 0
+	jmp L5
+L4 : 
+	mov t8, 1
+L5 : 
+	mov ax, t8
+	mov j, ax
+	mov ax, 3.5
+	mov bx, 2
+	mul bx
+	mov t10, ax
+	mov ax, var(1,t9)
+	mov bx, t10
+	add ax, bx
+	mov t11, ax
+	mov ax, t11
+	mov d, ax
+
+
+At line no: 10 compound_statement : LCURL statements RCURL 
+
+{
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+j=t8;
+d=t11;
+return 0;
+}
+
+ScopeTable# 2 
+1 -->  <c , ID> 
+7 -->  <i , ID> 
+12 -->  <d , ID> 
+18 -->  <j , ID> 
+19 -->  <a , ID> 
+
+
+
+ScopeTable# 1 
+3 -->  <main , ID> 
+
+
+ScopeTable with id 2 removed
+At line no: 10 func_definition : type_specifier ID LPAREN RPAREN compound_statement
+
+int main(){
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+j=t8;
+d=t11;
+return 0;
+}
+
+	mov bx, 0
+	add bx, bx
+	mov ax, 1
+	mov a[bx], ax
+	mov bx, 1
+	add bx, bx
+	mov ax, 5
+	mov a[bx], ax
+	mov bx, 0
+	add bx, bx
+	mov ax, a[bx]
+	mov t0, ax
+	mov bx, 1
+	add bx, bx
+	mov ax, a[bx]
+	mov t1, ax
+	mov ax, t0
+	mov bx, t1
+	add ax, bx
+	mov t2, ax
+	mov ax, t2
+	mov i, ax
+	mov ax, 2
+	mov bx, 3
+	mul bx
+	mov t3, ax
+	mov ax, 5
+	mov bx, 3
+	xor dx, dx
+	div bx
+	mov t4, ah
+	mov ax, t4
+	cmp ax, 4
+	jl L0
+	mov t5, 0
+	jmp L1
+L0:
+	mov t5, 1
+L1:
+	mov ax, t5
+	mov bx, 8
+	cmp ax, 0
+	je L2
+	cmp bx, 0
+	je L2
+	mov t6, 1
+	jmp L3
+L2 : 
+	mov t6, 0
+L3 : 
+	mov ax, t3
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov bx, 2
+	cmp ax, 0
+	jne L4
+	cmp bx, 0
+	jne L4
+	mov t8, 0
+	jmp L5
+L4 : 
+	mov t8, 1
+L5 : 
+	mov ax, t8
+	mov j, ax
+	mov ax, 3.5
+	mov bx, 2
+	mul bx
+	mov t10, ax
+	mov ax, var(1,t9)
+	mov bx, t10
+	add ax, bx
+	mov t11, ax
+	mov ax, t11
+	mov d, ax
+
+
+At line no: 10 unit : func_definition
+
+int main(){
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+j=t8;
+d=t11;
+return 0;
+}
+
+At line no: 10 program : unit
+
+int main(){
+int a[2],c,i,j;
+float d;
+a[0]=1;
+a[1]=5;
+i=t2;
+j=t8;
+d=t11;
+return 0;
+}
+
+	Symbol Table: 
+
+ScopeTable# 1 
+3 -->  <main , ID> 
+
+
+Total Lines: 11
+
+Total Errors: 1
+

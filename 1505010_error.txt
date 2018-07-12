@@ -1,0 +1,4 @@
+Error at Line 8: Undeclared Function var 
+
+Total Errors: 1
+

@@ -17,6 +17,7 @@ int yyparse(void);
 int yylex(void);
 extern FILE *yyin;
 FILE *fp2, *fp3;
+ofstream codeAsm;
 extern int line_num;
 extern int error;
 extern FILE *logout, *tokenout;
@@ -113,9 +114,21 @@ start : program
 			fprintf(fp3, "Total Errors: %d\n\n", error);
 		}	
 		
-		ofstream codeOut;
-		codeOut.open("code.asm");
-		codeOut << $1->code;
+		//ofstream codeOut;
+		//codeAsm.open("code.asm");
+		string top = ".MODEL SMALL \n.STACK 100H \n.DATA\n";
+		string var;
+		codeAsm << top;
+		for(int i=0; i< tempCount; i++)
+		{
+			var = "\tt" + to_string(i) + " DW ?\n";
+			codeAsm << var;
+		}
+		codeAsm << ".CODE \nMAIN PROC \n";
+		codeAsm << $$->code;
+		codeAsm << "\nMAIN ENDP\n";
+		codeAsm << "END MAIN\n";
+		
 		
 	}
 	;
@@ -131,7 +144,13 @@ program : program unit {
 			$$->setName(allConcat);
 			//$$->setType("program");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-	
+			$$->code = $1->code + $2->code;
+			
+			//codeAsm.open("code.asm");
+			//codeAsm << $$->code;
+			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+		
 			}
 	| unit {
 		//printf("At line no: %d program : unit\n\n", line_num);
@@ -152,6 +171,7 @@ unit : var_declaration {
 			$$->setType($1->getType());
 			$$->type = $1->type;
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
 			}
      | func_declaration {
 			//printf("At line no: %d unit : func_declaration\n\n", line_num);
@@ -160,7 +180,9 @@ unit : var_declaration {
 			//printf("%s\n\n", $1->getName().c_str());
 			//$$->setType("unit");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-	
+			
+			//$$ = $1;
+			
 			}
      | func_definition {
 			//printf("At line no: %d unit : func_definition\n\n", line_num);
@@ -169,7 +191,10 @@ unit : var_declaration {
 			//printf("%s\n\n", $1->getName().c_str());
 			//$$->setType("unit");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-	
+			
+			//$$ = $1;
+			//fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
 			}
      ;
      
@@ -595,6 +620,8 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN {
 			
 			errFlag=0;
 			
+			$$->code = $7->code;
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			
 			}
 		| type_specifier ID LPAREN RPAREN { 
@@ -733,6 +760,10 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN {
 			
 			errFlag=0;
 			
+			$$->code = $6->code;
+			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
 			}
  		;				
 
@@ -865,6 +896,8 @@ compound_statement : LCURL { //fprintf(fp2,"found LCURL\n"); /*if(flag==0) {tabl
 			flag=0;
 			//table->printAllScope(fp2);
 			//table->exitScope(fp2);
+			
+			$$->code = $3->code;
 			
 			}
  		    | LCURL { //fprintf(fp2,"found LCURL\n"); /*if(flag==0) {table->enterScope(fp2);}*/
@@ -1229,6 +1262,11 @@ statements : statement {
 			$$->setName(allConcat);
 			//$$->setType("statements");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			$$->code += $2->code;
+			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
 			}
 	   ;
 	   
@@ -1289,6 +1327,18 @@ statement : var_declaration {
 			$$->setName(allConcat);
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			string label=newLabel();
+			$$->code+="\tmov ax, "+$3->getName()+"\n";
+			$$->code+="\tcmp ax, 0\n";
+			$$->code+="\tje "+label+"\n";
+			$$->code+=$5->code;
+			$$->code+=label+":\n";
+			
+			//codeAsm << $$->code.c_str() << endl;
+			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
 			}
 	  | IF LPAREN expression RPAREN statement ELSE statement {
 			//printf("At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
@@ -1492,6 +1542,12 @@ variable : ID {
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
 			//fprintf(fp2,"%s (%s) \n\n",$$->getName().c_str(), s->type.c_str());
 			
+			$$->code=$3->code+"\tmov bx, " +$3->getName() +"\n\tadd bx, bx\n";
+			//delete $3;
+			//codeAsm << $$->code.c_str() <<endl;
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
+			
 			}
 	 ;
 	 
@@ -1515,6 +1571,8 @@ variable : ID {
 			//printf("%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str());
 			
 			//fprintf(fp2, "\n\n vartype: (%s) %s, exprs_type:(%s) %s\n\n", $1->getName().c_str(), varType.c_str(),  $3->getName().c_str(),logic_expressionType.c_str());
+			
+			string name = "";
 			
 			size_t found = $1->getName().find("[");
 			if(found==string::npos)
@@ -1581,6 +1639,9 @@ variable : ID {
 					err.append(logic_expressionType);
 					printError(err, line_num);
 				}*/
+				
+				name = $1->getName();
+				
 			}
 			else
 			{
@@ -1597,7 +1658,39 @@ variable : ID {
 					printError(err, line_num);
 				}
 				
+				vector <string> tokens;
+				stringstream check1($1->getName().c_str());
+				string intermediate;
+				string intermediate2;
+		
+				while(getline(check1, intermediate, '[')){
+					stringstream check2(intermediate);
+					string intermediate2;
+					if(getline(check2, intermediate2, ']')){
+						tokens.push_back(intermediate2);
+					}
+					else { tokens.push_back(intermediate); }
+				}
+				
+				
+				name = tokens[0];
+				
 			}
+			
+			$$ = $1;
+			
+			$$->code=$3->code+$1->code;
+			$$->code+="\tmov ax, "+$3->getName()+"\n";
+			if($$->type=="INT_ARRAY"){ 
+				$$->code+= "\tmov "+ name +"[bx], ax\n";	
+			}
+			else{
+				$$->code+= "\tmov "+$1->getName()+", ax\n";
+			}
+			//delete $3;
+			
+			//codeAsm << $$->code.c_str() << endl;
+			
 			
 			
 			string allConcat ;
@@ -1609,6 +1702,8 @@ variable : ID {
 			$$->setName(allConcat);
 			//$$->setType("expression");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			
 			}
 	   ;
@@ -1646,6 +1741,47 @@ logic_expression : rel_expression 	{
 				$$->type = $1->type;
 			}
 			
+			$$->code+=$3->code;
+			$$->code+="\tmov ax, " + $1->getName()+"\n";
+			$$->code+="\tmov bx, " + $3->getName()+"\n";
+			string temp=newTemp();
+			string label1 = newLabel(); // ELSE
+			string label2 = newLabel(); // END
+					
+			if($2->getName()=="&&"){
+				/* 
+				Check whether both operands value is 1. If both are one set value of a temporary variable to 1
+				otherwise 0
+				*/
+				
+				$$->code += "\tcmp ax, 0\n";
+				$$->code += "\tje " + label1 + "\n";
+				$$->code += "\tcmp bx, 0\n";
+				$$->code += "\tje " + label1 + "\n"; // jump ELSE
+				$$->code += "\tmov " + temp + ", 1\n";
+				$$->code += "\tjmp " + label2 + "\n"; // jump END
+				$$->code += label1 + " : \n\tmov " + temp + ", 0\n";
+				$$->code += label2 + " : \n";
+				
+			}
+			else if($2->getName()=="||"){
+			
+				// label1 = TRUE;
+				//label2 = END;
+				
+				$$->code += "\tcmp ax, 0\n";
+				$$->code += "\tjne " + label1 + "\n"; // jump TRUE
+				$$->code += "\tcmp bx, 0\n"; // first variable found false...
+				$$->code += "\tjne " + label1 + "\n"; // jump TRUE
+				$$->code += "\tmov " + temp + ", 0\n"; // false....
+				$$->code += "\tjmp " + label2 + "\n"; // jump END
+				$$->code += label1 + " : \n\tmov " + temp + ", 1\n";
+				$$->code += label2 + " : \n";
+				
+				
+			}
+			//delete $3;
+			
 			
 			string allConcat ;
 			
@@ -1663,6 +1799,15 @@ logic_expression : rel_expression 	{
 			
 			
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			
+			
+			$$->setName(temp);
+			
+			//codeAsm << $$->code.c_str() <<endl;
+			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
 			}
 		 ;
 			
@@ -1683,8 +1828,17 @@ rel_expression	: simple_expression  {
 			
 			//printf("%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str());
 			
+			if($1->type!="FLOAT")
+			{
+				$1->type = "INT";
+			}
+			if($3->type!="FLOAT")
+			{
+				$3->type = "INT";
+			}
 			
-			if($1->type.compare($3->type))
+			
+			/*if($1->type.compare($3->type))
 			{
 				string err = "Type Mismatch: Both side of RELOP should be same type";
 				printError(err, line_num);
@@ -1693,7 +1847,40 @@ rel_expression	: simple_expression  {
 			{
 				$$->setType($1->getType());
 				$$->type = $1->type;
+			}*/
+			
+			
+			$$->code+=$3->code;
+			$$->code+="\tmov ax, " + $1->getName()+"\n";
+			$$->code+="\tcmp ax, " + $3->getName()+"\n";
+			string temp=newTemp();
+			string label1=newLabel();
+			string label2=newLabel();
+			if($2->getName()=="<"){
+				$$->code+="\tjl " + label1+"\n";
 			}
+			else if($2->getName()=="<="){
+				$$->code+="\tjle " + label1+"\n";
+			}
+			else if($2->getName()==">"){
+				$$->code+="\tjg " + label1+"\n";
+			}
+			else if($2->getName()==">="){
+				$$->code+="\tjge " + label1+"\n";
+			}
+			else if($2->getName()=="=="){
+				$$->code+="\tje " + label1+"\n";
+			}
+			else{
+				$$->code+="\tjne " + label1+"\n";
+			}
+			
+			$$->code+="\tmov "+temp +", 0\n";
+			$$->code+="\tjmp "+label2 +"\n";
+			$$->code+=label1+":\n\tmov "+temp+", 1\n";
+			$$->code+=label2+":\n";
+			
+			
 			
 			string allConcat ;
 			
@@ -1703,15 +1890,17 @@ rel_expression	: simple_expression  {
 			$$->setName(allConcat);
 			//$$->setType("rel_expression");
 			
-			
-			
 			string concatType = $1->getType().c_str();
 			concatType.append(" ");
 			concatType.append($3->getType().c_str());
 			
-			
-			
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			$$->setName(temp);
+			//delete $3;
+			
+			//codeAsm << $$->code.c_str() << endl;
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			
 			}
 		;
@@ -1768,11 +1957,36 @@ simple_expression : term  {
 				$$->type = $1->type;
 			}*/
 			
+			$$ = $1;
+			
+			$$->code+=$3->code;
+			$$->code += "\tmov ax, "+ $1->getName() +"\n";
+			$$->code += "\tmov bx, "+ $3->getName() +"\n";
+			// move one of the operands to a register, perform addition or subtraction with the other operand and move the result in a temporary variable  
+			string temp=newTemp();
+			if($2->getName()=="+"){
+				$$->code += "\tadd ax, bx\n";
+				$$->code += "\tmov "+ temp + ", ax\n";
+			}
+			else{
+				$$->code += "\tsub ax, bx\n";
+				$$->code += "\tmov "+ temp + ", ax\n";
+			}
+			//delete $3;
+			//cout <<$$->code.c_str() << endl;
+			//codeAsm << $$->code.c_str() << endl;
+			
+			
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
 			allConcat.append($2->getName().c_str());
 			allConcat.append($3->getName().c_str());
+			
+			
+			//string dollar1 = $1->getName();
+			
+			//$$ changed so did $1
 			$$->setName(allConcat);
 			//$$->setType("simple_expression");
 			//fprintf(fp2,"%s\n\n",$$->getName().c_str());
@@ -1785,6 +1999,9 @@ simple_expression : term  {
 			
 			
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			
+			$$->setName(temp);
 			
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
@@ -1896,6 +2113,30 @@ term :	unary_expression {
 				$$->type = a;
 			}
 			
+			//string concatType = $1->getType().c_str();
+			//concatType.append(" ");
+			//concatType.append($3->getType().c_str());
+			
+			$$->code += $3->code;
+			$$->code += "\tmov ax, "+ $1->getName()+"\n";
+			$$->code += "\tmov bx, "+ $3->getName() +"\n";
+			string temp=newTemp();
+			if($2->getName()=="*"){
+				$$->code += "\tmul bx\n";
+				$$->code += "\tmov "+ temp + ", ax\n";
+			}
+			else if($2->getName()=="/"){
+				$$->code +="\txor dx, dx\n";
+				$$->code += "\tdiv bx\n";
+				$$->code += "\tmov "+temp+", al\n"; // 8 bit quotient
+				// clear dx, perform 'div bx' and mov ax to temp
+			}
+			else{
+				$$->code +="\txor dx, dx\n";
+				$$->code += "\tdiv bx\n";
+				$$->code += "\tmov "+temp+", ah\n"; // 8 bit remainder
+				// clear dx, perform 'div bx' and mov dx to temp
+			}
 			
 			string allConcat ;
 			
@@ -1907,11 +2148,11 @@ term :	unary_expression {
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->getType().c_str());
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
 			
+			$$->setName(temp);
+			cout << endl << $$->code.c_str() << endl;
 			
-			
-			//string concatType = $1->getType().c_str();
-			//concatType.append(" ");
-			//concatType.append($3->getType().c_str());
+			//codeAsm << $$->code.c_str() << endl;
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			
 			
 			
@@ -1951,11 +2192,13 @@ unary_expression : ADDOP unary_expression  {
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
 			
 			string temp=newTemp();
-			$$->code="mov ax, " + $2->getName() + "\n";
-			$$->code+="not ax\n";
-			$$->code+="mov "+temp+", ax";
+			$$->code="\tmov ax, " + $2->getName() + "\n";
+			$$->code+="\tnot ax\n";
+			$$->code+="\tmov "+temp+", ax";
 						
-			cout << $$->code.c_str();
+			//cout << $$->code.c_str();
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			//codeAsm << $$->code.c_str();
 			
 			}
 		 | factor {
@@ -1985,17 +2228,40 @@ factor	: variable {
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->type.c_str());
 			
 			if($$->type=="INT_ARRAY"){
+				
+				vector <string> tokens;
+				stringstream check1($1->getName().c_str());
+				string intermediate;
+				string intermediate2;
+		
+				while(getline(check1, intermediate, '[')){
+					stringstream check2(intermediate);
+					string intermediate2;
+					if(getline(check2, intermediate2, ']')){
+						tokens.push_back(intermediate2);
+					}
+					else { tokens.push_back(intermediate); }
+				}
+				
+				string name = tokens[0];
+				
+				
 				string temp= newTemp();
-				$$->code+="mov ax, " + $1->getName() + "[bx]\n";
-				$$->code+= "mov " + temp + ", ax\n";
+				$$->code+="\tmov ax, " + name + "[bx]\n";
+				$$->code+= "\tmov " + temp + ", ax\n";
 				$$->setName(temp);
 			}
 			else{
-				
+				string temp = newTemp();
+				$$->code+="\tmov ax, " + $1->getName()+"\n";
+				$$->code+= "\tmov " + temp + ", ax\n";
+				$$->setName(temp);
+				//$$->code+="mov ax, 
 			}
 			
-			//cout << $$->code.c_str();
-			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			//codeAsm << $$->code.c_str();
+			//cout <<  $$->code.c_str() << "\n" << $$->type.c_str() ;
 			
 			}
 	| ID LPAREN argument_list RPAREN {
@@ -2153,6 +2419,9 @@ factor	: variable {
 			$$->type = $2->type;
 			
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			$$ = $2;
+			
 			}
 	| CONST_INT  {
 			//printf("At line no: %d factor : CONST_INT \n\n", line_num);
@@ -2206,6 +2475,21 @@ factor	: variable {
 			allConcat.append($2->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			if($1->type=="INT_ARRAY")
+			{
+			
+			}
+			else
+			{
+				string temp=newTemp();
+				$$->code="\tmov ax, " + $1->getName() + "\n";
+				$$->code+="\tinc ax\n";
+				$$->code+="\tmov "+temp+", ax";
+			
+			}
+			
+			
 			}
 	| variable DECOP {
 			//printf("At line no: %d factor : variable DECOP \n\n", line_num);
@@ -2234,6 +2518,25 @@ factor	: variable {
 			allConcat.append($2->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			if($1->type=="INT_ARRAY")
+			{
+			
+			}
+			else
+			{
+				string temp=newTemp();
+				$$->code="\tmov ax, " + $1->getName() + "\n";
+				$$->code+="\tdec ax\n";
+				$$->code+="\tmov "+temp+", ax";
+			
+			}
+						
+			//cout << $$->code.c_str();
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
+			//codeAsm << $$->code.c_str();
+			
+			
 			}
 	;
 	
@@ -2330,6 +2633,9 @@ int main(int argc,char *argv[])
 	
 	fp2= fopen(argv[2],"a");
 	fp3= fopen(argv[3],"a");
+	
+	codeAsm.open("code.asm");
+	
 	
 
 	yyin=fp;
