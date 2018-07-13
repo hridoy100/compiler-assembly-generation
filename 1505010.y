@@ -125,9 +125,11 @@ start : program
 		codeAsm << declared_variables << endl;
 		
 		codeAsm << ".CODE \nMAIN PROC \n";
+		codeAsm << "\tmov ax, @DATA\n\tmov ds, ax\n\n";
 		codeAsm << $$->code;
 		codeAsm << "\nMAIN ENDP\n";
-		codeAsm << "include input.asm ; INDEC \ninclude decimal_output.asm ; OUTDEC\n";
+		//codeAsm << "include input.asm \t; INDEC \n";
+		codeAsm << "include decimal_output.asm \t; OUTDEC\n";
 		codeAsm << procedure;
 		codeAsm << "END MAIN\n";
 		
@@ -362,6 +364,10 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN {
 		b.append(" ");
 		SymbolInfo *s = table->lookUp(b);
 		
+		procedure += $2->getName() +" PROC\n";
+		procedure+="\tpop bx \t\t;RETRIEVE RETURN ADDRESS FROM THE CALL.\n";
+							
+		
 		if(!s->getName().compare("-1"))
 		{				
 			 table->insert(b, $2->getType().c_str(), fp2);
@@ -456,7 +462,9 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN {
 							//s->functionParameters.push_back("INT");
 							if(declared==0) s->functionParameters.push_back("INT");
 							declared_variables += tokens[i] + to_string(s2->scope) +"\tDW \t ?\n";
-							//fprintf(fp3, "added to function parameters INT\n");						
+							//fprintf(fp3, "added to function parameters INT\n");	
+							procedure+="\tpop ax\t\t;get value from stack\n";
+							procedure+="\tmov "+ tokens[i] + to_string(s2->scope) + " , ax\t;get that value back into the variable..\n";				
 						}
 					}
 					else if(!tokens[i-1].compare("double"))
@@ -517,10 +525,14 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN {
 			}*/
 		
 		}
+		
+		procedure+="\tpush bx \t\t;PUT RETURN ADDRESS BACK.\n";
+		
+		
 		} compound_statement {
 			
 			
-			procedure += $2->getName() +" PROC\n";
+			//procedure += $2->getName() +" PROC\n";
 			procedure+=$7->code;
 			//procedure+="ret\n";
 			procedure+= $2->getName()+" ENDP\n";
@@ -966,7 +978,7 @@ var_declaration : type_specifier declaration_list SEMICOLON {
 			for(int i=0; i<tokens.size(); i++) {	
 				string b = tokens[i];
 				b.append(" ");
-				///fprintf(fp2, "Tokens: %s\n", b.c_str());
+				//printf("Tokens: %s\n", b.c_str());
 				SymbolInfo *s2 = table->lookUp(b);
 				if(!s2->getName().compare("-1"))
 				{				
@@ -997,7 +1009,7 @@ var_declaration : type_specifier declaration_list SEMICOLON {
 				
 				SymbolInfo *s2 = table->lookUp(b);
 				
-				declared_variables += tokens[i] + to_string(s2->scope) + "\tDW\t ?\n";
+				//declared_variables += tokens[i] + to_string(s2->scope) + "\tDW\t ?\n";
 				//fprintf(fp2, "T: %s (%s) \n", s2->getName().c_str(), s2->type.c_str());
 		
 			}
@@ -1103,6 +1115,8 @@ declaration_list : declaration_list COMMA ID {
 				//string b = s->getName().c_str();
 				//b.append(" ");
 				table->insert(b, "ID",  fp2);
+				s = table->lookUp(b);
+				declared_variables += $3->getName() + to_string(s->scope) + "\tDW\t ?\n";
 				
 			}
 			else {
@@ -1163,6 +1177,7 @@ declaration_list : declaration_list COMMA ID {
 				table->insert(b, "ID",  fp2);
 				s = table->lookUp(b);
 				s->type = "INT_ARRAY";
+				declared_variables += $3->getName() + to_string(s->scope) + "\tDW\t " + $5->getName()+ " DUP ('?')\n";
 			}
 			else {
 				//yyerror(
@@ -1190,6 +1205,8 @@ declaration_list : declaration_list COMMA ID {
 				//string b = s->getName().c_str();
 				//b.append(" ");
 				table->insert(b, "ID",  fp2);
+				s = table->lookUp(b);
+				declared_variables += $1->getName() + to_string(s->scope) + "\tDW\t ?\n";
 			}
 			else {
 				//yyerror(
@@ -1241,6 +1258,12 @@ declaration_list : declaration_list COMMA ID {
 			fprintf(fp2, "At line no: %d declaration_list : ID LTHIRD CONST_INT RTHIRD\n\n", line_num);
 		
 			//printf("%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str());
+			
+			string b = $1->getName().c_str();
+			b.append(" ");
+			SymbolInfo *s = table->lookUpCur(b);
+			declared_variables += $1->getName() + to_string(s->scope) + "\tDW\t " + $4->getName()+ " DUP ('?')\n";
+			
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -1470,15 +1493,22 @@ statement : var_declaration {
 			//printf("%s%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str(), $5->getName().c_str());
 			
 			string label = newLabel(); //PRINT:
-			string tmp = "\tMOV AH,2\n\tMOV DL,0Dh\n\tINT 21H\n\tMOV DL,0Ah\n\tINT 21H\n" + label + ": \t\t;PRINT\n\tpop ax\n\tmov ax, ";
-			tmp +=$3->getName();
-			tmp += "\n\tCALL OUTDEC\n";
+			//string tmp = "\tMOV AH,2\n\tMOV DL,0Dh\n\tINT 21H\n\tMOV DL,0Ah\n\tINT 21H\n" + label + ": \t\t;PRINT\n\tpop ax\n\tmov ax, ";
+			string tmp = "\tMOV AH,2\n\tMOV DL,0Dh\n\tINT 21H\n\tMOV DL,0Ah\n\tINT 21H\n" + label + ": \t\t;PRINT\n\tmov ax, ";
 			
-			tmp+=  "\tMOV AH, 2\n\tMOV DL, ' '\n\tINT 21H\n\tLOOP " + label + "\n";
-				   
+			SymbolInfo *s = table->lookUp($3->getName()+" ");
+			if(s->getName()=="-1"){
+				
+			}
+			else{
+				tmp +=$3->getName()+to_string(s->scope)+"\n";
+				tmp += "\n\tCALL OUTDEC\n";
 			
-			$$->code += tmp;
+				//tmp+=  "\tMOV AH, 2\n\tMOV DL, ' '\n\tINT 21H\n\tLOOP " + label + "\n";
+				tmp+=  "\tMOV AH,2\n\tMOV DL,0Dh\n\tINT 21H\n\tMOV DL,0Ah\n\tINT 21H\n";
 			
+				$$->code += tmp;
+			}
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -1499,6 +1529,23 @@ statement : var_declaration {
 			fprintf(fp2, "At line no: %d statement : RETURN expression SEMICOLON \n\n", line_num);
 			
 			//printf("%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str());
+			
+			/*pop  bx  ;RETRIEVE RETURN ADDRESS FROM THE CALL.
+  			push ax  ;VALUE TO RETURN ('0' OR '1').
+			push bx  ;PUT RETURN ADDRESS BACK.*/
+			
+			/*procedure+="\tpop bx\t\t; ;RETRIEVE RETURN ADDRESS FROM THE CALL.\n";
+			procedure+="\tpush "+$2->getName()+"\t\t;VALUE TO RETURN \n";
+			procedure+="\tpush bx\t\t;PUT RETURN ADDRESS BACK.\n";
+			procedure+="\tret\n";
+			*/
+			
+			$$->code+="\tpop bx\t\t;RETRIEVE RETURN ADDRESS FROM THE CALL.\n";
+			$$->code+="\tpush "+$2->getName()+"\t\t;VALUE TO RETURN \n";
+			$$->code+="\tpush bx\t\t;PUT RETURN ADDRESS BACK.\n";
+			$$->code+="\tret\n";
+			
+			
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -2504,11 +2551,11 @@ factor	: variable {
 			//now push argument lists..
 			$$->code+=args;
 			
-			$$->code +="\tcall "+ $1->getName()+"\n";
+			$$->code +="\n\tcall "+ $1->getName()+"\n\n";
 			string temp = newTemp();
 			if(funcNameSym->type=="INT")	{
 				
-				$$->code+= "\tpop ax\t;function's return value in ax register\n";
+				$$->code+= "\tpop ax\t\t;function's return value in ax register\n";
 				$$->code+="\tmov "+temp+", ax\n";
 				declared_variables+=temp+"\tDW\t ?\n";
 			}

@@ -2,488 +2,904 @@ At line no: 1 type_specifier : INT
 
 int
 
-At line no: 1 type_specifier : INT
-
-int
-
-At line no: 1 parameter_list : type_specifier ID 
-
-int su
-
-At line no: 1 type_specifier : INT
-
-int
-
-At line no: 1 parameter_list : parameter_list COMMA type_specifier ID 
-
-int su,int vu
-
 New ScopeTable with id 2 created
+At line no: 2 type_specifier : INT
+
+int
+
+At line no: 2 declaration_list : ID
+
+a
+
+At line no: 2 declaration_list : declaration_list COMMA ID 
+
+a,b
+
+At line no: 2 declaration_list : declaration_list COMMA ID 
+
+a,b,i
+
+At line no: 2 var_declaration : type_specifier declaration_list SEMICOLON
+
+int a,b,i;
+
+
+At line no: 2 statement : var_declaration
+
+int a,b,i;
+
+
+At line no: 2 statements : statement
+
+int a,b,i;
+
+
 At line no: 3 variable : ID 
 
-su2
+b2
 
-At line no: 3 variable : ID 
+At line no: 3 factor : CONST_INT 
 
-vu2
-
-At line no: 3 factor : variable
-
-vu2
-
-	mov ax, vu2
-	mov t0, ax
-
+0
 
 At line no: 3 unary_expression : factor 
 
-t0
+0
 
 At line no: 3 term : unary_expression
 
-t0
+0
 
 At line no: 3 simple_expression : term
 
-t0
+0
 
 At line no: 3 rel_expression : simple_expression 
 
-t0
+0
 
 At line no: 3 logic_expression : rel_expression 
 
-t0
+0
 
 At line no: 3 expression : variable ASSIGNOP logic_expression 
 
-su2=t0
+b2=0
 
-	mov ax, vu2
-	mov t0, ax
-	mov ax, t0
-	mov su2, ax
+	mov ax, 0
+	mov b2, ax
 
 
 At line no: 3 expression_statement : expression SEMICOLON
 
-su2=t0;
+b2=0;
 
 At line no: 3 statement : expression_statement 
 
-su2=t0
+b2=0
 
-At line no: 3 statements : statement
+At line no: 3 statements : statements statement
 
-su2=t0
+int a,b,i;
+b2=0
 
-At line no: 4 compound_statement : LCURL statements RCURL 
-
-{
-su2=t0}
-
-ScopeTable# 2 
-14 -->  <su , ID> 
-17 -->  <vu , ID> 
+	mov ax, 0
+	mov b2, ax
 
 
+At line no: 4 variable : ID 
 
-ScopeTable# 1 
-18 -->  <fuu , ID> 
+i2
+
+At line no: 4 factor : CONST_INT 
+
+0
+
+At line no: 4 unary_expression : factor 
+
+0
+
+At line no: 4 term : unary_expression
+
+0
+
+At line no: 4 simple_expression : term
+
+0
+
+At line no: 4 rel_expression : simple_expression 
+
+0
+
+At line no: 4 logic_expression : rel_expression 
+
+0
+
+At line no: 4 expression : variable ASSIGNOP logic_expression 
+
+i2=0
+
+	mov ax, 0
+	mov i2, ax
 
 
-ScopeTable with id 2 removed
-At line no: 4 func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statement
+At line no: 4 expression_statement : expression SEMICOLON
 
-int fuu(int su,int vu){
-su2=t0}
+i2=0;
 
-	mov ax, vu2
+At line no: 4 variable : ID 
+
+i2
+
+At line no: 4 factor : variable
+
+i2
+
+	mov ax, i2
+	mov t0, ax
+
+
+At line no: 4 unary_expression : factor 
+
+t0
+
+At line no: 4 term : unary_expression
+
+t0
+
+At line no: 4 simple_expression : term
+
+t0
+
+At line no: 4 factor : CONST_INT 
+
+4
+
+At line no: 4 unary_expression : factor 
+
+4
+
+At line no: 4 term : unary_expression
+
+4
+
+At line no: 4 simple_expression : term
+
+4
+
+At line no: 4 rel_expression : simple_expression RELOP simple_expression 
+
+t0<4
+
+	mov ax, i2
 	mov t0, ax
 	mov ax, t0
-	mov su2, ax
+	cmp ax, 4
+	jl L0
+	mov t1, 0
+	jmp L1
+L0:
+	mov t1, 1
+L1:
 
 
-At line no: 4 unit : func_definition
+At line no: 4 logic_expression : rel_expression 
 
-int fuu(int su,int vu){
-su2=t0}
+t1
 
-At line no: 4 program : unit
+At line no: 4 expression : logic_expression 
 
-int fuu(int su,int vu){
-su2=t0}
+t1
 
-At line no: 6 type_specifier : INT
+At line no: 4 expression_statement : expression SEMICOLON
 
-int
+t1;
 
-New ScopeTable with id 3 created
-At line no: 7 type_specifier : INT
+At line no: 4 variable : ID 
 
-int
+i2
 
-At line no: 7 declaration_list : ID
+At line no: 4 factor : variable INCOP 
 
-a
+i2
 
-At line no: 7 declaration_list : declaration_list COMMA ID 
+At line no: 4 unary_expression : factor 
 
-a,c
+t2
 
-At line no: 7 declaration_list : declaration_list COMMA ID 
+At line no: 4 term : unary_expression
 
-a,c,i
+t2
 
-At line no: 7 declaration_list : declaration_list COMMA ID 
+At line no: 4 simple_expression : term
 
-a,c,i,j
+t2
 
-At line no: 7 var_declaration : type_specifier declaration_list SEMICOLON
+At line no: 4 rel_expression : simple_expression 
 
-int a,c,i,j;
+t2
+
+At line no: 4 logic_expression : rel_expression 
+
+t2
+
+At line no: 4 expression : logic_expression 
+
+t2
+
+At line no: 5 variable : ID 
+
+a2
+
+At line no: 5 factor : CONST_INT 
+
+3
+
+At line no: 5 unary_expression : factor 
+
+3
+
+At line no: 5 term : unary_expression
+
+3
+
+At line no: 5 simple_expression : term
+
+3
+
+At line no: 5 rel_expression : simple_expression 
+
+3
+
+At line no: 5 logic_expression : rel_expression 
+
+3
+
+At line no: 5 expression : variable ASSIGNOP logic_expression 
+
+a2=3
+
+	mov ax, 3
+	mov a2, ax
 
 
-At line no: 7 statement : var_declaration
+At line no: 5 expression_statement : expression SEMICOLON
 
-int a,c,i,j;
+a2=3;
 
+At line no: 5 statement : expression_statement 
+
+a2=3
+
+At line no: 5 statements : statement
+
+a2=3
+
+At line no: 6 variable : ID 
+
+a2
+
+At line no: 6 factor : variable DECOP 
+
+a2
+
+	mov ax, a2
+	dec ax
+	mov t3, ax
+
+At line no: 6 unary_expression : factor 
+
+t3
+
+At line no: 6 term : unary_expression
+
+t3
+
+At line no: 6 simple_expression : term
+
+t3
+
+At line no: 6 rel_expression : simple_expression 
+
+t3
+
+At line no: 6 logic_expression : rel_expression 
+
+t3
+
+At line no: 6 expression : logic_expression 
+
+t3
+
+At line no: 7 variable : ID 
+
+b2
+
+At line no: 7 factor : variable INCOP 
+
+b2
+
+At line no: 7 unary_expression : factor 
+
+t4
+
+At line no: 7 term : unary_expression
+
+t4
+
+At line no: 7 simple_expression : term
+
+t4
+
+At line no: 7 rel_expression : simple_expression 
+
+t4
+
+At line no: 7 logic_expression : rel_expression 
+
+t4
+
+At line no: 7 expression : logic_expression 
+
+t4
+
+At line no: 7 expression_statement : expression SEMICOLON
+
+t4;
+
+At line no: 7 statement : expression_statement 
+
+t4
 
 At line no: 7 statements : statement
 
-int a,c,i,j;
+t4
 
+At line no: 8 compound_statement : LCURL statements RCURL 
 
-At line no: 7 type_specifier : INT
+{
+t4}
 
-int
+At line no: 8 statement : compound_statement 
 
-At line no: 7 declaration_list : ID
+{
+t4}
 
-d
+At line no: 8 statement : WHILE LPAREN expression RPAREN statement 
 
-At line no: 7 var_declaration : type_specifier declaration_list SEMICOLON
-
-int d;
-
-
-At line no: 7 statement : var_declaration
-
-int d;
-
-
-At line no: 7 statements : statements statement
-
-int a,c,i,j;
-int d;
-
-
-
-
-At line no: 8 variable : ID 
-
-a3
-
-At line no: 8 factor : variable
-
-a3
-
-	mov ax, a3
-	mov t1, ax
-
-
-At line no: 8 unary_expression : factor 
-
-t1
-
-At line no: 8 term : unary_expression
-
-t1
-
-At line no: 8 simple_expression : term
-
-t1
-
-At line no: 8 rel_expression : simple_expression 
-
-t1
-
-At line no: 8 logic_expression : rel_expression 
-
-t1
-
-At line no: 8 arguments : logic_expression
-
-t1
-
-At line no: 8 variable : ID 
-
-c3
-
-At line no: 8 factor : variable
-
-c3
-
-	mov ax, c3
-	mov t2, ax
-
-
-At line no: 8 unary_expression : factor 
-
-t2
-
-At line no: 8 term : unary_expression
-
-t2
-
-At line no: 8 simple_expression : term
-
-t2
-
-At line no: 8 rel_expression : simple_expression 
-
-t2
-
-At line no: 8 logic_expression : rel_expression 
-
-t2
-
-At line no: 8 arguments : arguments COMMA logic_expression
-
-t1,t2
-
-At line no: 8 argument_list : arguments
-
-t1,t2
-
-At line no: 8 factor : ID LPAREN argument_list RPAREN
-
-fuu(t1,t2)
-
-
-	;push register data
-	push ax
-	push bx
-	push cx
-	push dx
-
-	push t2
-	push t1
-	call fuu
-	pop ax	;function's return value in ax register
-	mov t3, ax
-	pop dx
-	pop cx
-	pop bx
-	pop ax
-
-
-At line no: 8 unary_expression : factor 
-
-t3
-
-At line no: 8 term : unary_expression
-
-t3
-
-At line no: 8 simple_expression : term
-
-t3
-
-At line no: 8 rel_expression : simple_expression 
-
-t3
-
-At line no: 8 logic_expression : rel_expression 
-
-t3
-
-At line no: 8 expression : logic_expression 
-
-t3
-
-At line no: 8 expression_statement : expression SEMICOLON
-
-t3;
-
-At line no: 8 statement : expression_statement 
-
-t3
+while(t3){
+t4}
 
 At line no: 8 statements : statements statement
 
-int a,c,i,j;
-int d;
-t3
+a2=3while(t3){
+t4}
+
+	mov ax, 3
+	mov a2, ax
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	
+	jmp L2	;WHILE
+L3:	;END WHILE
 
 
-	;push register data
-	push ax
-	push bx
-	push cx
-	push dx
+At line no: 9 compound_statement : LCURL statements RCURL 
 
-	push t2
-	push t1
-	call fuu
-	pop ax	;function's return value in ax register
-	mov t3, ax
-	pop dx
-	pop cx
-	pop bx
-	pop ax
+{
+a2=3while(t3){
+t4}}
 
+At line no: 9 statement : compound_statement 
 
-At line no: 9 factor : CONST_INT 
+{
+a2=3while(t3){
+t4}}
 
-0
+At line no: 9 statement : FOR LPAREN expression_statement expression_statement expression RPAREN statement 
 
-At line no: 9 unary_expression : factor 
+for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}
 
-0
-
-At line no: 9 term : unary_expression
-
-0
-
-At line no: 9 simple_expression : term
-
-0
-
-At line no: 9 rel_expression : simple_expression 
-
-0
-
-At line no: 9 logic_expression : rel_expression 
-
-0
-
-At line no: 9 expression : logic_expression 
-
-0
-
-At line no: 9 statement : RETURN expression SEMICOLON 
-
-return 0;
+	mov ax, 0
+	mov i2, ax
+L4:		;FOR
+	mov ax, i2
+	mov t0, ax
+	mov ax, t0
+	cmp ax, 4
+	jl L0
+	mov t1, 0
+	jmp L1
+L0:
+	mov t1, 1
+L1:
+	cmp t1, 0 	
+	je L5	;END FOR
+	mov ax, 3
+	mov a2, ax
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	
+	jmp L2	;WHILE
+L3:	;END WHILE
+	
+	mov ax, i2
+	inc ax
+	mov t2, ax	
+	jmp L4	;FOR
+L5:	;END FOR
 
 
 At line no: 9 statements : statements statement
 
-int a,c,i,j;
-int d;
-t3return 0;
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}
+
+	mov ax, 0
+	mov b2, ax
+	mov ax, 0
+	mov i2, ax
+L4:		;FOR
+	mov ax, i2
+	mov t0, ax
+	mov ax, t0
+	cmp ax, 4
+	jl L0
+	mov t1, 0
+	jmp L1
+L0:
+	mov t1, 1
+L1:
+	cmp t1, 0 	
+	je L5	;END FOR
+	mov ax, 3
+	mov a2, ax
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	
+	jmp L2	;WHILE
+L3:	;END WHILE
+	
+	mov ax, i2
+	inc ax
+	mov t2, ax	
+	jmp L4	;FOR
+L5:	;END FOR
 
 
+At line no: 10 statement : PRINTLN LPAREN ID RPAREN SEMICOLON
 
-	;push register data
-	push ax
-	push bx
-	push cx
-	push dx
-
-	push t2
-	push t1
-	call fuu
-	pop ax	;function's return value in ax register
-	mov t3, ax
-	pop dx
-	pop cx
-	pop bx
-	pop ax
+println(a);
 
 
-At line no: 10 compound_statement : LCURL statements RCURL 
+At line no: 10 statements : statements statement
+
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}println(a);
+
+
+	mov ax, 0
+	mov b2, ax
+	mov ax, 0
+	mov i2, ax
+L4:		;FOR
+	mov ax, i2
+	mov t0, ax
+	mov ax, t0
+	cmp ax, 4
+	jl L0
+	mov t1, 0
+	jmp L1
+L0:
+	mov t1, 1
+L1:
+	cmp t1, 0 	
+	je L5	;END FOR
+	mov ax, 3
+	mov a2, ax
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	
+	jmp L2	;WHILE
+L3:	;END WHILE
+	
+	mov ax, i2
+	inc ax
+	mov t2, ax	
+	jmp L4	;FOR
+L5:	;END FOR
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L6: 		;PRINT
+	mov ax, a2
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+
+
+At line no: 11 statement : PRINTLN LPAREN ID RPAREN SEMICOLON
+
+println(b);
+
+
+At line no: 11 statements : statements statement
+
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}println(a);
+println(b);
+
+
+	mov ax, 0
+	mov b2, ax
+	mov ax, 0
+	mov i2, ax
+L4:		;FOR
+	mov ax, i2
+	mov t0, ax
+	mov ax, t0
+	cmp ax, 4
+	jl L0
+	mov t1, 0
+	jmp L1
+L0:
+	mov t1, 1
+L1:
+	cmp t1, 0 	
+	je L5	;END FOR
+	mov ax, 3
+	mov a2, ax
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	
+	jmp L2	;WHILE
+L3:	;END WHILE
+	
+	mov ax, i2
+	inc ax
+	mov t2, ax	
+	jmp L4	;FOR
+L5:	;END FOR
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L6: 		;PRINT
+	mov ax, a2
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L7: 		;PRINT
+	mov ax, b2
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+
+
+At line no: 12 statement : PRINTLN LPAREN ID RPAREN SEMICOLON
+
+println(c);
+
+
+At line no: 12 statements : statements statement
+
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}println(a);
+println(b);
+println(c);
+
+
+	mov ax, 0
+	mov b2, ax
+	mov ax, 0
+	mov i2, ax
+L4:		;FOR
+	mov ax, i2
+	mov t0, ax
+	mov ax, t0
+	cmp ax, 4
+	jl L0
+	mov t1, 0
+	jmp L1
+L0:
+	mov t1, 1
+L1:
+	cmp t1, 0 	
+	je L5	;END FOR
+	mov ax, 3
+	mov a2, ax
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	
+	jmp L2	;WHILE
+L3:	;END WHILE
+	
+	mov ax, i2
+	inc ax
+	mov t2, ax	
+	jmp L4	;FOR
+L5:	;END FOR
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L6: 		;PRINT
+	mov ax, a2
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L7: 		;PRINT
+	mov ax, b2
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+
+
+At line no: 13 compound_statement : LCURL statements RCURL 
 
 {
-int a,c,i,j;
-int d;
-t3return 0;
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}println(a);
+println(b);
+println(c);
 }
 
-ScopeTable# 3 
-1 -->  <c , ID> 
+ScopeTable# 2 
 7 -->  <i , ID> 
-12 -->  <d , ID> 
-18 -->  <j , ID> 
+10 -->  <b , ID> 
 19 -->  <a , ID> 
 
 
 
 ScopeTable# 1 
 3 -->  <main , ID> 
-18 -->  <fuu , ID> 
 
 
-ScopeTable with id 3 removed
-At line no: 10 func_definition : type_specifier ID LPAREN RPAREN compound_statement
-
-int main(){
-int a,c,i,j;
-int d;
-t3return 0;
-}
-
-
-	;push register data
-	push ax
-	push bx
-	push cx
-	push dx
-
-	push t2
-	push t1
-	call fuu
-	pop ax	;function's return value in ax register
-	mov t3, ax
-	pop dx
-	pop cx
-	pop bx
-	pop ax
-
-
-At line no: 10 unit : func_definition
+ScopeTable with id 2 removed
+At line no: 13 func_definition : type_specifier ID LPAREN RPAREN compound_statement
 
 int main(){
-int a,c,i,j;
-int d;
-t3return 0;
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}println(a);
+println(b);
+println(c);
 }
 
-At line no: 10 program : program unit
+	mov ax, 0
+	mov b2, ax
+	mov ax, 0
+	mov i2, ax
+L4:		;FOR
+	mov ax, i2
+	mov t0, ax
+	mov ax, t0
+	cmp ax, 4
+	jl L0
+	mov t1, 0
+	jmp L1
+L0:
+	mov t1, 1
+L1:
+	cmp t1, 0 	
+	je L5	;END FOR
+	mov ax, 3
+	mov a2, ax
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	mov ax, a2
+	dec ax
+	mov t3, axL2:		;WHILE
+	cmp t3, 0 	
+	je L3	;END WHILE
+	mov ax, b2
+	inc ax
+	mov t4, ax	
+	
+	jmp L2	;WHILE
+L3:	;END WHILE
+	
+	mov ax, i2
+	inc ax
+	mov t2, ax	
+	jmp L4	;FOR
+L5:	;END FOR
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L6: 		;PRINT
+	mov ax, a2
 
-int fuu(int su,int vu){
-su2=t0}int main(){
-int a,c,i,j;
-int d;
-t3return 0;
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L7: 		;PRINT
+	mov ax, b2
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+
+
+At line no: 13 unit : func_definition
+
+int main(){
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}println(a);
+println(b);
+println(c);
 }
 
+At line no: 13 program : unit
 
-	;push register data
-	push ax
-	push bx
-	push cx
-	push dx
-
-	push t2
-	push t1
-	call fuu
-	pop ax	;function's return value in ax register
-	mov t3, ax
-	pop dx
-	pop cx
-	pop bx
-	pop ax
-
+int main(){
+int a,b,i;
+b2=0for(i2=0; t1; t2){
+a2=3while(t3){
+t4}}println(a);
+println(b);
+println(c);
+}
 
 	Symbol Table: 
 
 ScopeTable# 1 
 3 -->  <main , ID> 
-18 -->  <fuu , ID> 
 
 
-Total Lines: 11
+Total Lines: 14
 
-Total Errors: 2
+Total Errors: 3
 
