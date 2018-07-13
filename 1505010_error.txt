@@ -1,4 +1,6 @@
-Error at Line 8: Undeclared Function var 
+Error at Line 3: Type Mismatch 
 
-Total Errors: 1
+Error at Line 8: Undeclared Variable: t1 
+
+Total Errors: 2
 

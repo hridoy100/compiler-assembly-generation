@@ -266,6 +266,17 @@ identifier [a-zA-Z_][a-zA-Z0-9_]*
 	yylval = (YYSTYPE)s;
 	return CONTINUE;
 	}
+"println" 	{
+	//printf("<CASE>");
+	fprintf(tokenout,"<PRINTLN>  ");
+	fprintf(logout,"Line No. %d: Token <PRINTLN> Lexeme %s found\n\n",line_num,yytext);
+	SymbolInfo *s= new  SymbolInfo(yytext, (char *)"PRINTLN");
+	yylval = (YYSTYPE)s;
+	return PRINTLN;
+	}
+	
+	
+	
 {ws} {}
 {digits} {
 	//printf("<%s CONST_INT>\n", yytext);

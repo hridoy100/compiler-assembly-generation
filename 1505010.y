@@ -26,6 +26,9 @@ int flag =0;
 int errFlag=0;
 SymbolTable *table;
 extern char* yytext;
+
+string declared_variables;
+string procedure;
 //extern YYSTYPE yylval;
 
 void yyerror(const char *s)
@@ -97,19 +100,11 @@ string newTemp()
 
 start : program
 	{
-		//printf("At line no: %d start : program\n\n", line_num);
-		//fprintf(fp2,"At line no: %d start : program\n\n", line_num);		
-		//printf("\t%.10g\n",$1->getName()); 	
-		//write your code in this block in all the similar blocks below
-		//printf("%s\n", $1->getName().c_str());
 		$$->setType("start");
-		//fprintf(fp2,"%s\n\n",$$->getName().c_str());	
-		
 		fprintf(fp2,"\tSymbol Table: \n\n");		
 		table->printAllScope(fp2); 
 		fprintf(fp2,"Total Lines: %d\n\n", line_num);
-		fprintf(fp2,"Total Errors: %d\n\n", error);	
-		
+		fprintf(fp2,"Total Errors: %d\n\n", error);		
 		if(error>0) {
 			fprintf(fp3, "Total Errors: %d\n\n", error);
 		}	
@@ -118,15 +113,22 @@ start : program
 		//codeAsm.open("code.asm");
 		string top = ".MODEL SMALL \n.STACK 100H \n.DATA\n";
 		string var;
-		codeAsm << top;
+		codeAsm << top << endl;
+		//temporary variables..
 		for(int i=0; i< tempCount; i++)
 		{
-			var = "\tt" + to_string(i) + " DW ?\n";
+			var = "t" + to_string(i) + "\tDW\t ?\n";
 			codeAsm << var;
 		}
+		codeAsm << endl;
+		//declared variables..
+		codeAsm << declared_variables << endl;
+		
 		codeAsm << ".CODE \nMAIN PROC \n";
 		codeAsm << $$->code;
 		codeAsm << "\nMAIN ENDP\n";
+		codeAsm << "include input.asm ; INDEC \ninclude decimal_output.asm ; OUTDEC\n";
+		codeAsm << procedure;
 		codeAsm << "END MAIN\n";
 		
 		
@@ -144,7 +146,9 @@ program : program unit {
 			$$->setName(allConcat);
 			//$$->setType("program");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-			$$->code = $1->code + $2->code;
+			//$$->code = $1->code + $2->code;
+			
+			$$->code = $2->code;
 			
 			//codeAsm.open("code.asm");
 			//codeAsm << $$->code;
@@ -444,13 +448,14 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN {
 							//s->functionParameters.push_back("INT_ARRAY");
 							if(declared==0) s->functionParameters.push_back("INT_ARRAY");
 							//fprintf(fp3, "added to function parameters INT_ARRAY\n");
+							declared_variables += tokens[i] + to_string(s2->scope) +"\tDW \t ?\n";
 							
 						}
 						else {
 							s2->type = "INT";
 							//s->functionParameters.push_back("INT");
 							if(declared==0) s->functionParameters.push_back("INT");
-							
+							declared_variables += tokens[i] + to_string(s2->scope) +"\tDW \t ?\n";
 							//fprintf(fp3, "added to function parameters INT\n");						
 						}
 					}
@@ -513,6 +518,14 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN {
 		
 		}
 		} compound_statement {
+			
+			
+			procedure += $2->getName() +" PROC\n";
+			procedure+=$7->code;
+			//procedure+="ret\n";
+			procedure+= $2->getName()+" ENDP\n";
+			
+			
 			
 			
 			string checkForReturn = $7->getName().c_str();
@@ -874,6 +887,7 @@ compound_statement : LCURL { //fprintf(fp2,"found LCURL\n"); /*if(flag==0) {tabl
 			
 			//printf("%s\n%s%s\n\n", $1->getName().c_str(), $3->getName().c_str(), $4->getName().c_str());	
 			
+			$$=$3;
 			
 			string allConcat ;
 			allConcat.append($1->getName().c_str());
@@ -972,6 +986,7 @@ var_declaration : type_specifier declaration_list SEMICOLON {
 						s2->type = $1->getType().c_str();
 					//fprintf(fp2,"Inserted bfr cmpnd stmnt %s\n\n", s2->getName().c_str());
 				}
+				
 		
 			}
 			
@@ -981,6 +996,8 @@ var_declaration : type_specifier declaration_list SEMICOLON {
 				b.append(" ");
 				
 				SymbolInfo *s2 = table->lookUp(b);
+				
+				declared_variables += tokens[i] + to_string(s2->scope) + "\tDW\t ?\n";
 				//fprintf(fp2, "T: %s (%s) \n", s2->getName().c_str(), s2->type.c_str());
 		
 			}
@@ -1299,24 +1316,71 @@ statement : var_declaration {
 			fprintf(fp2, "At line no: %d statement : FOR LPAREN expression_statement expression_statement expression RPAREN statement \n\n", line_num);
 			
 			//printf("%s%s%s%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str(), $5->getName().c_str(), $6->getName().c_str(), $7->getName().c_str());
+			
+			
+			/*
+				$3's code at first, which is already done by assigning $$=$3
+				create two labels and append one of them in $$->code
+				compare $4's symbol with 0
+				if equal jump to 2nd label
+				append $7's code
+				append $5's code
+				append the second label in the code
+			*/
+			
+			//perform later...
+			
+			
+			$$=$3;
+			string label1 = newLabel(); //FOR
+			string label2 = newLabel(); //END FOR
+			
+			$$->code+=label1+":\t\t;FOR\n";
+			$$->code+=$4->code;
+			$$->code+="\tcmp "+$4->getName()+", 0 \t\n";
+			$$->code+="\tje "+label2+"\t;END FOR\n";
+			$$->code+=$7->code +"\t\n" ;
+			$$->code+=$5->code+"\t\n";
+			$$->code+= "\tjmp "+label1+"\t;FOR\n";
+			$$->code+= label2+":\t;END FOR\n";
+			
+			
+			
+			
 			string allConcat ;
 	
 			allConcat.append($1->getName().c_str());
 			allConcat.append($2->getName().c_str());
 			allConcat.append($3->getName().c_str());
+			allConcat.append("; ");
 			allConcat.append($4->getName().c_str());
+			allConcat.append("; ");
 			allConcat.append($5->getName().c_str());
 			allConcat.append($6->getName().c_str());
 			allConcat.append($7->getName().c_str());
 			$$->setName(allConcat);
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			fprintf(fp2,"%s\n\n",$$->code.c_str());
+			
 			}
 	  | IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE {
 			//printf("At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
 			
 			//printf("%s%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str(), $5->getName().c_str());
+			
+			$$=$3;
+			
+			string label=newLabel();
+			$$->code+="\tmov ax, "+$3->getName()+"\n";
+			$$->code+="\tcmp ax, 0\n";
+			$$->code+="\tje "+label+"\t;ENDIF\n";
+			$$->code+=$5->code;
+			$$->code+=label+":\t\t;ENDIF\n";
+			
+			//codeAsm << $$->code.c_str() << endl;
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -1328,23 +1392,30 @@ statement : var_declaration {
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
 			
-			string label=newLabel();
-			$$->code+="\tmov ax, "+$3->getName()+"\n";
-			$$->code+="\tcmp ax, 0\n";
-			$$->code+="\tje "+label+"\n";
-			$$->code+=$5->code;
-			$$->code+=label+":\n";
-			
-			//codeAsm << $$->code.c_str() << endl;
-			
 			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			
 			}
 	  | IF LPAREN expression RPAREN statement ELSE statement {
 			//printf("At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
-			fprintf(fp2, "At line no: %d statement : IF LPAREN expression RPAREN statement \n\n", line_num);
+			fprintf(fp2, "At line no: %d statement : IF LPAREN expression RPAREN statement ELSE statement  \n\n", line_num);
 			
 			//printf("%s%s%s%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str(), $5->getName().c_str(), $6->getName().c_str(), $7->getName().c_str());
+			
+			$$=$3;
+			
+			string label1=newLabel(); 	//ELSE
+			string label2=newLabel();	//ENDIF
+			$$->code+="\tmov ax, "+$3->getName()+"\n";
+			$$->code+="\tcmp ax, 0\n";
+			$$->code+="\tje "+label1+"\t;ELSE\n";
+			$$->code+=$5->code;
+			$$->code+="\tjmp "+label2 + "\t;ENDIF\n";
+			$$->code+=label1+":\t\t;ELSE\n";
+			$$->code+= $7->code;
+			$$->code+= label2+":\t\t;ENDIF\n";
+			
+			
+			
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -1357,12 +1428,30 @@ statement : var_declaration {
 			$$->setName(allConcat);
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			
+			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			}
 	  | WHILE LPAREN expression RPAREN statement {
 			//printf("At line no: %d statement : WHILE LPAREN expression RPAREN statement \n\n", line_num);
 			fprintf(fp2, "At line no: %d statement : WHILE LPAREN expression RPAREN statement \n\n", line_num);
 			
 			//printf("%s%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str(), $5->getName().c_str());
+			
+			$$=$3;
+			string label1 = newLabel(); //WHILE
+			string label2 = newLabel();
+			
+			$$->code+=label1+":\t\t;WHILE\n";
+			$$->code+="\tcmp "+$3->getName()+", 0 \t\n";
+			$$->code+="\tje "+label2+"\t;END WHILE\n";
+			$$->code+=$5->code +"\t\n" ;
+			$$->code+=$3->code+"\t\n";
+			$$->code+= "\tjmp "+label1+"\t;WHILE\n";
+			$$->code+= label2+":\t;END WHILE\n";
+			
+			
+			
+			
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -1379,6 +1468,17 @@ statement : var_declaration {
 			fprintf(fp2, "At line no: %d statement : PRINTLN LPAREN ID RPAREN SEMICOLON\n\n", line_num);
 			
 			//printf("%s%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str(), $5->getName().c_str());
+			
+			string label = newLabel(); //PRINT:
+			string tmp = "\tMOV AH,2\n\tMOV DL,0Dh\n\tINT 21H\n\tMOV DL,0Ah\n\tINT 21H\n" + label + ": \t\t;PRINT\n\tpop ax\n\tmov ax, ";
+			tmp +=$3->getName();
+			tmp += "\n\tCALL OUTDEC\n";
+			
+			tmp+=  "\tMOV AH, 2\n\tMOV DL, ' '\n\tINT 21H\n\tLOOP " + label + "\n";
+				   
+			
+			$$->code += tmp;
+			
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -1430,7 +1530,7 @@ expression_statement 	: SEMICOLON	{
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
-			allConcat.append("\n");
+			//allConcat.append("\n");
 			
 			$$->setName(allConcat);
 			//$$->setType("expression_statement");
@@ -1449,13 +1549,16 @@ expression_statement 	: SEMICOLON	{
 			
 			allConcat.append($1->getName().c_str());
 			allConcat.append($2->getName().c_str());
-			allConcat.append("\n");
+			//allConcat.append("\n");
 			
-			$$->setName(allConcat);
+			//$$->setName(allConcat);
 			//$$->setType("expression_statement");
-			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			//fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			fprintf(fp2,"%s\n\n",allConcat.c_str());
 			
 			errFlag=0;
+			
+			$$=$1;
 			
 			}	
 			;
@@ -1487,8 +1590,11 @@ variable : ID {
 			else
 			{
 				$$->type = s->type;
+				
+				
 			}
-			
+			$$->scope = s->scope;
+			$$->setName($1->getName()+to_string(s->scope));
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
 			//fprintf(fp2,"%s(%s)\n\n",$$->getName().c_str(), s->type.c_str());
 			
@@ -1685,7 +1791,7 @@ variable : ID {
 				$$->code+= "\tmov "+ name +"[bx], ax\n";	
 			}
 			else{
-				$$->code+= "\tmov "+$1->getName()+", ax\n";
+				$$->code+= "\tmov "+ name +", ax\n";
 			}
 			//delete $3;
 			
@@ -1760,8 +1866,8 @@ logic_expression : rel_expression 	{
 				$$->code += "\tje " + label1 + "\n"; // jump ELSE
 				$$->code += "\tmov " + temp + ", 1\n";
 				$$->code += "\tjmp " + label2 + "\n"; // jump END
-				$$->code += label1 + " : \n\tmov " + temp + ", 0\n";
-				$$->code += label2 + " : \n";
+				$$->code += label1 + ": \n\tmov " + temp + ", 0\n";
+				$$->code += label2 + ": \n";
 				
 			}
 			else if($2->getName()=="||"){
@@ -1775,8 +1881,8 @@ logic_expression : rel_expression 	{
 				$$->code += "\tjne " + label1 + "\n"; // jump TRUE
 				$$->code += "\tmov " + temp + ", 0\n"; // false....
 				$$->code += "\tjmp " + label2 + "\n"; // jump END
-				$$->code += label1 + " : \n\tmov " + temp + ", 1\n";
-				$$->code += label2 + " : \n";
+				$$->code += label1 + ": \n\tmov " + temp + ", 1\n";
+				$$->code += label2 + ": \n";
 				
 				
 			}
@@ -2253,7 +2359,7 @@ factor	: variable {
 			}
 			else{
 				string temp = newTemp();
-				$$->code+="\tmov ax, " + $1->getName()+"\n";
+				$$->code+="\tmov ax, " + $1->getName() +"\n";
 				$$->code+= "\tmov " + temp + ", ax\n";
 				$$->setName(temp);
 				//$$->code+="mov ax, 
@@ -2269,13 +2375,12 @@ factor	: variable {
 			fprintf(fp2, "At line no: %d factor : ID LPAREN argument_list RPAREN\n\n", line_num);
 			
 			//printf("%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str());
-			
-			
 			string argList = $3->getName().c_str();
 			string funcName = $1->getName().c_str();
 			funcName.append(" ");
 			SymbolInfo *funcNameSym = table->lookUp(funcName);
-			
+			string args="";	
+			vector<string> tokens;
 			
 			if(!funcNameSym->getName().compare("-1"))
 			{
@@ -2300,11 +2405,11 @@ factor	: variable {
 			}
 		
 			
-						
+					
 			
 			///fprintf(fp2, "argList: %s\n",$3->getName().c_str());
 			///fprintf(fp2, "funcPara: %s\n",funcNameSym->getName().c_str());
-			vector<string> tokens;
+			
 			stringstream check1(argList.c_str());
 			string intermediate;
 		
@@ -2318,7 +2423,7 @@ factor	: variable {
 				printError(err, line_num);
 			}
 			else{
-		
+			
 			for(int i=0, j=0; i<tokens.size(); i++, j++) {	
 				string b = tokens[i];
 				b.append(" ");
@@ -2367,8 +2472,7 @@ factor	: variable {
 						printError(err, line_num);
 						break;
 					}
-					
-					
+						
 				}
 				else
 				{
@@ -2382,12 +2486,33 @@ factor	: variable {
 						break;
 					}
 				}
+				
+				//args+="\tpush "+tokens[i]+"\n";
 		
 			}
 			}
+			
+			
+			
+			}
+			for(int i=tokens.size()-1; i>=0; i--)
+			{
+				args+="\tpush "+tokens[i]+"\n";
 			}
 			
+			$$->code += "\n\t;push register data\n\tpush ax\n\tpush bx\n\tpush cx\n\tpush dx\n\n";
+			//now push argument lists..
+			$$->code+=args;
 			
+			$$->code +="\tcall "+ $1->getName()+"\n";
+			string temp = newTemp();
+			if(funcNameSym->type=="INT")	{
+				
+				$$->code+= "\tpop ax\t;function's return value in ax register\n";
+				$$->code+="\tmov "+temp+", ax\n";
+				declared_variables+=temp+"\tDW\t ?\n";
+			}
+			$$->code +="\tpop dx\n\tpop cx\n\tpop bx\n\tpop ax\n";
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
@@ -2399,6 +2524,9 @@ factor	: variable {
 			$$->setType(funcNameSym->type);
 			$$->type = funcNameSym->type;
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			$$->setName(temp);
+			fprintf(fp2,"%s\n\n",$$->code.c_str());
+			
 			//fprintf(fp2,"%s (%s)\n\n",$$->getName().c_str(), $$->getType().c_str());
 			
 			}
@@ -2475,20 +2603,21 @@ factor	: variable {
 			allConcat.append($2->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-			
+			string temp=newTemp();
 			if($1->type=="INT_ARRAY")
 			{
-			
+				
 			}
 			else
 			{
-				string temp=newTemp();
+				
 				$$->code="\tmov ax, " + $1->getName() + "\n";
 				$$->code+="\tinc ax\n";
 				$$->code+="\tmov "+temp+", ax";
 			
 			}
 			
+			$$->setName(temp);
 			
 			}
 	| variable DECOP {
@@ -2518,14 +2647,14 @@ factor	: variable {
 			allConcat.append($2->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-			
+			string temp=newTemp();
 			if($1->type=="INT_ARRAY")
 			{
 			
 			}
 			else
 			{
-				string temp=newTemp();
+				
 				$$->code="\tmov ax, " + $1->getName() + "\n";
 				$$->code+="\tdec ax\n";
 				$$->code+="\tmov "+temp+", ax";
@@ -2535,7 +2664,7 @@ factor	: variable {
 			//cout << $$->code.c_str();
 			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			//codeAsm << $$->code.c_str();
-			
+			$$->setName(temp);
 			
 			}
 	;
