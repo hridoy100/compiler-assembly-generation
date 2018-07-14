@@ -70,6 +70,7 @@ L0: 		;PRINT
 	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
 	push 0		;VALUE TO RETURN 
 	push bx		;PUT RETURN ADDRESS BACK.
+	ret
 
 ;return to operationg system
 	MOV AH, 4CH
@@ -85,6 +86,7 @@ f PROC
 	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
 	push t1		;VALUE TO RETURN 
 	push bx		;PUT RETURN ADDRESS BACK.
+	ret
 	mov ax, 9
 	mov a2, ax
 f ENDP
@@ -129,5 +131,6 @@ g PROC
 	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
 	push t8		;VALUE TO RETURN 
 	push bx		;PUT RETURN ADDRESS BACK.
+	ret
 g ENDP
 END MAIN

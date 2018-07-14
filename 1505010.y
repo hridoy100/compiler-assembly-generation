@@ -1361,6 +1361,7 @@ statement : var_declaration {
 			
 			$$->code+=label1+":\t\t;FOR\n";
 			$$->code+=$4->code;
+			$$->code+="\n";
 			$$->code+="\tcmp "+$4->getName()+", 0 \t\n";
 			$$->code+="\tje "+label2+"\t;END FOR\n";
 			$$->code+=$7->code +"\t\n" ;
@@ -1462,14 +1463,16 @@ statement : var_declaration {
 			//printf("%s%s%s%s%s\n\n", $1->getName().c_str(), $2->getName().c_str(), $3->getName().c_str(), $4->getName().c_str(), $5->getName().c_str());
 			
 			$$=$3;
+			string s = $3->code;
 			string label1 = newLabel(); //WHILE
 			string label2 = newLabel();
-			
+			$$->code+="\n";
 			$$->code+=label1+":\t\t;WHILE\n";
+			//$$->code+=s+"\t\n";
 			$$->code+="\tcmp "+$3->getName()+", 0 \t\n";
 			$$->code+="\tje "+label2+"\t;END WHILE\n";
 			$$->code+=$5->code +"\t\n" ;
-			$$->code+=$3->code+"\t\n";
+			$$->code+= s +"\t\n";
 			$$->code+= "\tjmp "+label1+"\t;WHILE\n";
 			$$->code+= label2+":\t;END WHILE\n";
 			
@@ -1486,6 +1489,8 @@ statement : var_declaration {
 			$$->setName(allConcat);
 			//$$->setType("statement");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			fprintf(fp2,"%s\n\n",$$->code.c_str());
+			
 			}
 	  | PRINTLN LPAREN ID RPAREN SEMICOLON {
 			//printf("At line no: %d statement : PRINTLN LPAREN ID RPAREN SEMICOLON\n\n", line_num);
@@ -1499,7 +1504,8 @@ statement : var_declaration {
 			
 			SymbolInfo *s = table->lookUp($3->getName()+" ");
 			if(s->getName()=="-1"){
-				
+				string err = "Undefined Variable "+$3->getName();
+				printError(err, line_num);
 			}
 			else{
 				tmp +=$3->getName()+to_string(s->scope)+"\n";
@@ -1856,9 +1862,9 @@ variable : ID {
 			allConcat.append($2->getName().c_str());
 			allConcat.append($3->getName().c_str());
 		
-			$$->setName(allConcat);
+			//$$->setName(allConcat);
 			//$$->setType("expression");
-			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			fprintf(fp2,"%s\n\n",allConcat.c_str());
 			
 			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			
@@ -2334,16 +2340,27 @@ unary_expression : ADDOP unary_expression  {
 			fprintf(fp2, "At line no: %d unary_expression : ADDOP unary_expression  \n\n", line_num);
 			
 			//printf("%s%s\n\n", $1->getName().c_str(), $2->getName().c_str());
+			if ($1->getName()=="-")
+			{
+				string temp=newTemp();
+				$$->code+"mov ax," + $2->getName() + "\n";
+				$$->code+"sub ax," + $2->getName() + "\n";
+				$$->code+"sub ax," + $2->getName() + "\n";
+				$$->code+="mov "+ temp+", ax"; //double negation then mov again
+				$$->setName(temp);
+			}
+			
+			
 			string allConcat ;
 			
 			allConcat.append($1->getName().c_str());
 			allConcat.append($2->getName().c_str());
-			$$->setName(allConcat);
+			//$$->setName(allConcat);
 			//$$->setType("unary_expression");
 			$$->setType($2->getType());
 			$$->type = $2->type;
 			
-			fprintf(fp2,"%s\n\n",$$->getName().c_str());
+			fprintf(fp2,"%s\n\n",allConcat.c_str());
 			}
 		 | NOT unary_expression  {
 			//printf("At line no: %d unary_expression : NOT unary_expression\n\n", line_num);
@@ -2365,7 +2382,7 @@ unary_expression : ADDOP unary_expression  {
 			$$->code="\tmov ax, " + $2->getName() + "\n";
 			$$->code+="\tnot ax\n";
 			$$->code+="\tmov "+temp+", ax";
-						
+			$$->setName(temp);			
 			//cout << $$->code.c_str();
 			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			//codeAsm << $$->code.c_str();
@@ -2668,7 +2685,7 @@ factor	: variable {
 			allConcat.append($2->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-			string temp=newTemp();
+			//string temp=newTemp();
 			if($1->type=="INT_ARRAY")
 			{
 				//$$->code+=";write for int array\n;" + $1->getName() + "\n";
@@ -2708,14 +2725,16 @@ factor	: variable {
 			else
 			{
 				
-				$$->code="\tmov ax, " + $1->getName() + "\n";
+				/*$$->code="\tmov ax, " + $1->getName() + "\n";
 				$$->code+="\tinc ax\n";
 				$$->code+="\tmov "+temp+", ax";
+				*/
+				$$->code+="\n\tinc " + $1->getName() +"\n";
 			
 			}
 			//fprintf(fp2, "code: %s \n %s\n %s\n ", $$->code.c_str(), $1->getName().c_str(), $1->type.c_str());
-			
-			$$->setName(temp);
+			$$->setName($1->getName());
+			//$$->setName(temp);
 			
 			}
 	| variable DECOP {
@@ -2745,7 +2764,7 @@ factor	: variable {
 			allConcat.append($2->getName().c_str());
 			//$$->setType("factor");
 			fprintf(fp2,"%s\n\n",$$->getName().c_str());
-			string temp=newTemp();
+			//string temp=newTemp();
 			if($1->type=="INT_ARRAY")
 			{
 				vector <string> tokens;
@@ -2776,16 +2795,20 @@ factor	: variable {
 			else
 			{
 				
-				$$->code="\tmov ax, " + $1->getName() + "\n";
+				/*$$->code="\tmov ax, " + $1->getName() + "\n";
 				$$->code+="\tdec ax\n";
 				$$->code+="\tmov "+temp+", ax";
+				*/
+				$$->code+="\n\tdec " + $1->getName() +"\n";
 			
 			}
 						
 			//cout << $$->code.c_str();
 			fprintf(fp2, "%s\n\n", $$->code.c_str());
 			//codeAsm << $$->code.c_str();
-			$$->setName(temp);
+			//$$->setName(temp);
+			$$->setName($1->getName());
+			
 			
 			}
 	;
