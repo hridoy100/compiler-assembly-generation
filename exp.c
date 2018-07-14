@@ -9,4 +9,6 @@ int main(){
         c[1]=c[0];
     println(a);
     println(b);
+    a=c[0];
+    println(a);
 }

@@ -127,6 +127,7 @@ start : program
 		codeAsm << ".CODE \nMAIN PROC \n";
 		codeAsm << "\tmov ax, @DATA\n\tmov ds, ax\n\n";
 		codeAsm << $$->code;
+		codeAsm << "\n;return to operationg system\n\tMOV AH, 4CH\n\tINT 21H\n";
 		codeAsm << "\nMAIN ENDP\n";
 		//codeAsm << "include input.asm \t; INDEC \n";
 		codeAsm << "include decimal_output.asm \t; OUTDEC\n";
@@ -1177,7 +1178,7 @@ declaration_list : declaration_list COMMA ID {
 				table->insert(b, "ID",  fp2);
 				s = table->lookUp(b);
 				s->type = "INT_ARRAY";
-				declared_variables += $3->getName() + to_string(s->scope) + "\tDW\t " + $5->getName()+ " DUP ('?')\n";
+				declared_variables += $3->getName() + to_string(s->scope) + "\tDW\t " + $5->getName()+ " DUP (?)\n";
 			}
 			else {
 				//yyerror(
@@ -1262,7 +1263,7 @@ declaration_list : declaration_list COMMA ID {
 			string b = $1->getName().c_str();
 			b.append(" ");
 			SymbolInfo *s = table->lookUpCur(b);
-			declared_variables += $1->getName() + to_string(s->scope) + "\tDW\t " + $4->getName()+ " DUP ('?')\n";
+			declared_variables += $1->getName() + to_string(s->scope) + "\tDW\t " + $4->getName()+ " DUP (?)\n";
 			
 			string allConcat ;
 			
@@ -1832,10 +1833,13 @@ variable : ID {
 			
 			$$ = $1;
 			
+			SymbolInfo *getScope = table->lookUp(name+" ");
+			
+			
 			$$->code=$3->code+$1->code;
 			$$->code+="\tmov ax, "+$3->getName()+"\n";
 			if($$->type=="INT_ARRAY"){ 
-				$$->code+= "\tmov "+ name +"[bx], ax\n";	
+				$$->code+= "\tmov "+ name + to_string(getScope->scope) +"[bx], ax\n";	
 			}
 			else{
 				$$->code+= "\tmov "+ name +", ax\n";
@@ -2279,15 +2283,28 @@ term :	unary_expression {
 				$$->code += "\tmov "+ temp + ", ax\n";
 			}
 			else if($2->getName()=="/"){
+			
+				/*$$->code += "xor dx, dx\n";
+				$$->code += "cw"+ string("d") +"\n";
+				$$->code += "idiv "+ string("bx")+"\n";
+				$$->code += "mov "+ string(temp) + ", ax\n";
+				*/
+				
 				$$->code +="\txor dx, dx\n";
-				$$->code += "\tdiv bx\n";
-				$$->code += "\tmov "+temp+", al\n"; // 8 bit quotient
+				$$->code += "\tidiv bx\n";
+				$$->code += "\tmov "+temp+", ax\n"; // 8 bit quotient
 				// clear dx, perform 'div bx' and mov ax to temp
 			}
 			else{
+				/*$$->code += "mov dx" + string(" 0 ")+ "\n";
+				$$->code += "cw"+ string("d") +"\n";
+				$$->code += "idiv "+ string("bx")+"\n";
+				$$->code += "mov "+ string(temp) + ", dx\n";
+				*/
+				
 				$$->code +="\txor dx, dx\n";
-				$$->code += "\tdiv bx\n";
-				$$->code += "\tmov "+temp+", ah\n"; // 8 bit remainder
+				$$->code += "\tidiv bx\n";
+				$$->code += "\tmov "+temp+", dx\n"; // 8 bit remainder
 				// clear dx, perform 'div bx' and mov dx to temp
 			}
 			
@@ -2397,10 +2414,11 @@ factor	: variable {
 				}
 				
 				string name = tokens[0];
-				
+				name +=" ";
+				SymbolInfo *getScope = table->lookUp(name);
 				
 				string temp= newTemp();
-				$$->code+="\tmov ax, " + name + "[bx]\n";
+				$$->code+="\tmov ax, " + tokens[0]+ to_string(getScope->scope) + "[bx]\n";
 				$$->code+= "\tmov " + temp + ", ax\n";
 				$$->setName(temp);
 			}

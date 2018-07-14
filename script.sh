@@ -10,4 +10,4 @@ g++ -fpermissive -w -c -o l.o lex.yy.c
 echo '4'
 g++ -o a.out y.o l.o -lfl -ly
 echo '5'
-./a.out loop.c 1505010_log.txt 1505010_error.txt
+./a.out exp.c 1505010_log.txt 1505010_error.txt
