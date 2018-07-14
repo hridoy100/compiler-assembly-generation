@@ -2671,6 +2671,38 @@ factor	: variable {
 			string temp=newTemp();
 			if($1->type=="INT_ARRAY")
 			{
+				//$$->code+=";write for int array\n;" + $1->getName() + "\n";
+				
+				//fprintf(fp2, "inside INT_ARRAY: %s", $$->code.c_str());
+				
+				vector <string> tokens;
+				stringstream check1($1->getName().c_str());
+				string intermediate;
+				string intermediate2;
+		
+				while(getline(check1, intermediate, '[')){
+					stringstream check2(intermediate);
+					string intermediate2;
+					if(getline(check2, intermediate2, ']')){
+						tokens.push_back(intermediate2);
+					}
+					else { tokens.push_back(intermediate); }
+				}
+				
+				string name = tokens[0];
+				
+				SymbolInfo *getScope = table->lookUp(name+" ");
+				
+				//$$->code+="\tmov bx, 0\n";
+				//$$->code+="\tadd bx, bx\n";
+				$$->code+="\n\tmov bx, " + tokens[1] + "\n";
+				$$->code+="\tadd bx, bx\n";
+				$$->code+="\tinc "+ tokens[0] + to_string(getScope->scope)+"[bx]\n\n";
+				
+				//fprintf(fp2, "inside INT_ARRAY: %s 	%s\n", tokens[0].c_str(),  tokens[1].c_str());
+				
+				
+				
 				
 			}
 			else
@@ -2681,6 +2713,7 @@ factor	: variable {
 				$$->code+="\tmov "+temp+", ax";
 			
 			}
+			//fprintf(fp2, "code: %s \n %s\n %s\n ", $$->code.c_str(), $1->getName().c_str(), $1->type.c_str());
 			
 			$$->setName(temp);
 			
@@ -2715,7 +2748,30 @@ factor	: variable {
 			string temp=newTemp();
 			if($1->type=="INT_ARRAY")
 			{
-			
+				vector <string> tokens;
+				stringstream check1($1->getName().c_str());
+				string intermediate;
+				string intermediate2;
+		
+				while(getline(check1, intermediate, '[')){
+					stringstream check2(intermediate);
+					string intermediate2;
+					if(getline(check2, intermediate2, ']')){
+						tokens.push_back(intermediate2);
+					}
+					else { tokens.push_back(intermediate); }
+				}
+				
+				string name = tokens[0];
+				
+				SymbolInfo *getScope = table->lookUp(name+" ");
+				
+				//$$->code+="\tmov bx, 0\n";
+				//$$->code+="\tadd bx, bx\n";
+				$$->code+="\n\tmov bx, " + tokens[1] + "\n";
+				$$->code+="\tadd bx, bx\n";
+				$$->code+="\dec "+ tokens[0] + to_string(getScope->scope)+"[bx]\n\n";
+				
 			}
 			else
 			{

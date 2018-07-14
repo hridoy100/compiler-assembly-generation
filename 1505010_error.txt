@@ -1,8 +1,12 @@
 Error at Line 3: Type Mismatch 
 
-Error at Line 4: Type Mismatch 
+Error at Line 8: Undeclared Variable: t2 
 
-Error at Line 12: Type Mismatch 
+Error at Line 14: Type Mismatch 
 
-Total Errors: 3
+Error at Line 15: Type Mismatch 
+
+Error at Line 16: Parameter number doesn't match!
+
+Total Errors: 5
 

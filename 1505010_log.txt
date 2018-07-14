@@ -2,36 +2,79 @@ At line no: 1 type_specifier : INT
 
 int
 
-New ScopeTable with id 2 created
-At line no: 2 type_specifier : INT
+At line no: 1 type_specifier : INT
 
 int
 
-At line no: 2 declaration_list : ID
+At line no: 1 parameter_list : type_specifier ID 
 
-a
+int a
 
-At line no: 2 declaration_list : declaration_list COMMA ID 
+New ScopeTable with id 2 created
+At line no: 2 factor : CONST_INT 
 
-a,b
+2
 
-At line no: 2 declaration_list : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD 
+At line no: 2 unary_expression : factor 
 
-a,b,c[3]
+2
 
-At line no: 2 var_declaration : type_specifier declaration_list SEMICOLON
+At line no: 2 term : unary_expression
 
-int a,b,c[3];
+2
+
+At line no: 2 variable : ID 
+
+a2
+
+At line no: 2 factor : variable
+
+a2
+
+	mov ax, a2
+	mov t0, ax
 
 
-At line no: 2 statement : var_declaration
+At line no: 2 unary_expression : factor 
 
-int a,b,c[3];
+t0
+
+At line no: 2 term : term MULOP unary_expression
+
+2*t0
+
+	mov ax, a2
+	mov t0, ax
+	mov ax, 2
+	mov bx, t0
+	mul bx
+	mov t1, ax
+
+
+At line no: 2 simple_expression : term
+
+t1
+
+At line no: 2 rel_expression : simple_expression 
+
+t1
+
+At line no: 2 logic_expression : rel_expression 
+
+t1
+
+At line no: 2 expression : logic_expression 
+
+t1
+
+At line no: 2 statement : RETURN expression SEMICOLON 
+
+return t1;
 
 
 At line no: 2 statements : statement
 
-int a,b,c[3];
+return t1;
 
 
 At line no: 3 variable : ID 
@@ -40,634 +83,426 @@ a2
 
 At line no: 3 factor : CONST_INT 
 
-1
+9
 
 At line no: 3 unary_expression : factor 
 
-1
+9
 
 At line no: 3 term : unary_expression
 
-1
-
-At line no: 3 factor : CONST_INT 
-
-2
-
-At line no: 3 unary_expression : factor 
-
-2
-
-At line no: 3 term : unary_expression
-
-2
+9
 
 At line no: 3 simple_expression : term
 
-2
-
-At line no: 3 factor : CONST_INT 
-
-3
-
-At line no: 3 unary_expression : factor 
-
-3
-
-At line no: 3 term : unary_expression
-
-3
-
-At line no: 3 simple_expression : simple_expression ADDOP term 
-
-2+3
-
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-
+9
 
 At line no: 3 rel_expression : simple_expression 
 
-t0
+9
 
 At line no: 3 logic_expression : rel_expression 
 
-t0
-
-At line no: 3 expression : logic_expression 
-
-t0
-
-At line no: 3 factor : LPAREN expression RPAREN 
-
-(t0)
-
-At line no: 3 unary_expression : factor 
-
-t0
-
-At line no: 3 term : term MULOP unary_expression
-
-1*t0
-
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-
-
-At line no: 3 factor : CONST_INT 
-
-3
-
-At line no: 3 unary_expression : factor 
-
-3
-
-At line no: 3 term : term MULOP unary_expression
-
-t1%3
-
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-
-
-At line no: 3 simple_expression : term
-
-t2
-
-At line no: 3 rel_expression : simple_expression 
-
-t2
-
-At line no: 3 logic_expression : rel_expression 
-
-t2
+9
 
 At line no: 3 expression : variable ASSIGNOP logic_expression 
 
-a2=t2
+a2=9
 
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
+	mov ax, 9
 	mov a2, ax
 
 
 At line no: 3 expression_statement : expression SEMICOLON
 
-a2=t2;
+a2=9;
 
 At line no: 3 statement : expression_statement 
 
-a2=t2
+a2=9
 
 At line no: 3 statements : statements statement
 
-int a,b,c[3];
-a2=t2
+return t1;
+a2=9
 
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push t1		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
+	mov ax, 9
 	mov a2, ax
 
 
-At line no: 4 variable : ID 
+At line no: 4 compound_statement : LCURL statements RCURL 
 
-b2
+{
+return t1;
+a2=9}
 
-At line no: 4 factor : CONST_INT 
-
-1
-
-At line no: 4 unary_expression : factor 
-
-1
-
-At line no: 4 term : unary_expression
-
-1
-
-At line no: 4 simple_expression : term
-
-1
-
-At line no: 4 factor : CONST_INT 
-
-5
-
-At line no: 4 unary_expression : factor 
-
-5
-
-At line no: 4 term : unary_expression
-
-5
-
-At line no: 4 simple_expression : term
-
-5
-
-At line no: 4 rel_expression : simple_expression RELOP simple_expression 
-
-1<5
-
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
+ScopeTable# 2 
+19 -->  <a , ID> 
 
 
-At line no: 4 logic_expression : rel_expression 
+
+ScopeTable# 1 
+14 -->  <f , ID> 
+
+
+ScopeTable with id 2 removed
+At line no: 4 func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statement
+
+int f(int a){
+return t1;
+a2=9}
+
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push t1		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
+	mov ax, 9
+	mov a2, ax
+
+	ret
+
+
+At line no: 4 unit : func_definition
+
+int f(int a){
+return t1;
+a2=9}
+
+At line no: 4 program : unit
+
+int f(int a){
+return t1;
+a2=9}
+
+At line no: 6 type_specifier : INT
+
+int
+
+At line no: 6 type_specifier : INT
+
+int
+
+At line no: 6 parameter_list : type_specifier ID 
+
+int a
+
+At line no: 6 type_specifier : INT
+
+int
+
+At line no: 6 parameter_list : parameter_list COMMA type_specifier ID 
+
+int a,int b
+
+New ScopeTable with id 3 created
+At line no: 7 type_specifier : INT
+
+int
+
+At line no: 7 declaration_list : ID
+
+x
+
+At line no: 7 var_declaration : type_specifier declaration_list SEMICOLON
+
+int x;
+
+
+At line no: 7 statement : var_declaration
+
+int x;
+
+
+At line no: 7 statements : statement
+
+int x;
+
+
+At line no: 8 variable : ID 
+
+x3
+
+At line no: 8 variable : ID 
+
+a3
+
+At line no: 8 factor : variable
+
+a3
+
+	mov ax, a3
+	mov t2, ax
+
+
+At line no: 8 unary_expression : factor 
+
+t2
+
+At line no: 8 term : unary_expression
+
+t2
+
+At line no: 8 simple_expression : term
+
+t2
+
+At line no: 8 rel_expression : simple_expression 
+
+t2
+
+At line no: 8 logic_expression : rel_expression 
+
+t2
+
+At line no: 8 arguments : logic_expression
+
+t2
+
+At line no: 8 argument_list : arguments
+
+t2
+
+At line no: 8 factor : ID LPAREN argument_list RPAREN
+
+f(t2)
+
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t2
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+
+
+At line no: 8 unary_expression : factor 
 
 t3
 
-At line no: 4 expression : variable ASSIGNOP logic_expression 
+At line no: 8 term : unary_expression
 
-b2=t3
+t3
 
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
+At line no: 8 simple_expression : term
 
+t3
 
-At line no: 4 expression_statement : expression SEMICOLON
+At line no: 8 variable : ID 
 
-b2=t3;
+a3
 
-At line no: 4 statement : expression_statement 
+At line no: 8 factor : variable
 
-b2=t3
+a3
 
-At line no: 4 statements : statements statement
-
-int a,b,c[3];
-a2=t2b2=t3
-
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
-
-
-At line no: 5 factor : CONST_INT 
-
-0
-
-At line no: 5 unary_expression : factor 
-
-0
-
-At line no: 5 term : unary_expression
-
-0
-
-At line no: 5 simple_expression : term
-
-0
-
-At line no: 5 rel_expression : simple_expression 
-
-0
-
-At line no: 5 logic_expression : rel_expression 
-
-0
-
-At line no: 5 expression : logic_expression 
-
-0
-
-At line no: 5 variable : ID LTHIRD expression RTHIRD 
-
-c[0]
-
-	mov bx, 0
-	add bx, bx
-
-
-At line no: 5 factor : CONST_INT 
-
-2
-
-At line no: 5 unary_expression : factor 
-
-2
-
-At line no: 5 term : unary_expression
-
-2
-
-At line no: 5 simple_expression : term
-
-2
-
-At line no: 5 rel_expression : simple_expression 
-
-2
-
-At line no: 5 logic_expression : rel_expression 
-
-2
-
-At line no: 5 expression : variable ASSIGNOP logic_expression 
-
-c[0]=2
-
-	mov bx, 0
-	add bx, bx
-	mov ax, 2
-	mov c2[bx], ax
-
-
-At line no: 5 expression_statement : expression SEMICOLON
-
-c[0]=2;
-
-At line no: 5 statement : expression_statement 
-
-c[0]=2
-
-At line no: 5 statements : statements statement
-
-int a,b,c[3];
-a2=t2b2=t3c[0]=2
-
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
-	mov bx, 0
-	add bx, bx
-	mov ax, 2
-	mov c2[bx], ax
-
-
-At line no: 6 variable : ID 
-
-a2
-
-At line no: 6 factor : variable
-
-a2
-
-	mov ax, a2
+	mov ax, a3
 	mov t4, ax
 
 
-At line no: 6 unary_expression : factor 
+At line no: 8 unary_expression : factor 
 
 t4
 
-At line no: 6 term : unary_expression
+At line no: 8 term : unary_expression
 
 t4
 
-At line no: 6 simple_expression : term
+At line no: 8 simple_expression : simple_expression ADDOP term 
 
-t4
-
-At line no: 6 rel_expression : simple_expression 
-
-t4
-
-At line no: 6 variable : ID 
-
-b2
-
-At line no: 6 factor : variable
-
-b2
-
-	mov ax, b2
-	mov t5, ax
+t3+t4
 
 
-At line no: 6 unary_expression : factor 
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
 
-t5
+	push t2
 
-At line no: 6 term : unary_expression
+	call f
 
-t5
-
-At line no: 6 simple_expression : term
-
-t5
-
-At line no: 6 rel_expression : simple_expression 
-
-t5
-
-At line no: 6 logic_expression : rel_expression LOGICOP rel_expression 
-
-t4&&t5
-
-	mov ax, a2
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, a3
 	mov t4, ax
-	mov ax, b2
+	mov ax, t3
+	mov bx, t4
+	add ax, bx
 	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
 
 
-At line no: 6 expression : logic_expression 
+At line no: 8 variable : ID 
+
+b3
+
+At line no: 8 factor : variable
+
+b3
+
+	mov ax, b3
+	mov t6, ax
+
+
+At line no: 8 unary_expression : factor 
 
 t6
 
-At line no: 7 factor : CONST_INT 
+At line no: 8 term : unary_expression
 
-0
+t6
 
-At line no: 7 unary_expression : factor 
+At line no: 8 simple_expression : simple_expression ADDOP term 
 
-0
-
-At line no: 7 term : unary_expression
-
-0
-
-At line no: 7 simple_expression : term
-
-0
-
-At line no: 7 rel_expression : simple_expression 
-
-0
-
-At line no: 7 logic_expression : rel_expression 
-
-0
-
-At line no: 7 expression : logic_expression 
-
-0
-
-At line no: 7 variable : ID LTHIRD expression RTHIRD 
-
-c[0]
-
-	mov bx, 0
-	add bx, bx
+t5+t6
 
 
-At line no: 7 factor : variable INCOP 
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
 
-c[0]
+	push t2
 
-At line no: 7 unary_expression : factor 
+	call f
 
-t7
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, a3
+	mov t4, ax
+	mov ax, t3
+	mov bx, t4
+	add ax, bx
+	mov t5, ax
+	mov ax, b3
+	mov t6, ax
+	mov ax, t5
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
 
-At line no: 7 term : unary_expression
+
+At line no: 8 rel_expression : simple_expression 
 
 t7
 
-At line no: 7 simple_expression : term
+At line no: 8 logic_expression : rel_expression 
 
 t7
 
-At line no: 7 rel_expression : simple_expression 
+At line no: 8 expression : variable ASSIGNOP logic_expression 
 
-t7
-
-At line no: 7 logic_expression : rel_expression 
-
-t7
-
-At line no: 7 expression : logic_expression 
-
-t7
-
-At line no: 7 expression_statement : expression SEMICOLON
-
-t7;
-
-At line no: 7 statement : expression_statement 
-
-t7
-
-At line no: 9 factor : CONST_INT 
-
-1
-
-At line no: 9 unary_expression : factor 
-
-1
-
-At line no: 9 term : unary_expression
-
-1
-
-At line no: 9 simple_expression : term
-
-1
-
-At line no: 9 rel_expression : simple_expression 
-
-1
-
-At line no: 9 logic_expression : rel_expression 
-
-1
-
-At line no: 9 expression : logic_expression 
-
-1
-
-At line no: 9 variable : ID LTHIRD expression RTHIRD 
-
-c[1]
-
-	mov bx, 1
-	add bx, bx
+x3=t7
 
 
-At line no: 9 factor : CONST_INT 
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
 
-0
+	push t2
 
-At line no: 9 unary_expression : factor 
+	call f
 
-0
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, a3
+	mov t4, ax
+	mov ax, t3
+	mov bx, t4
+	add ax, bx
+	mov t5, ax
+	mov ax, b3
+	mov t6, ax
+	mov ax, t5
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov x3, ax
 
-At line no: 9 term : unary_expression
 
-0
+At line no: 8 expression_statement : expression SEMICOLON
 
-At line no: 9 simple_expression : term
+x3=t7;
 
-0
+At line no: 8 statement : expression_statement 
 
-At line no: 9 rel_expression : simple_expression 
+x3=t7
 
-0
+At line no: 8 statements : statements statement
 
-At line no: 9 logic_expression : rel_expression 
+int x;
+x3=t7
 
-0
 
-At line no: 9 expression : logic_expression 
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
 
-0
+	push t2
 
-At line no: 9 variable : ID LTHIRD expression RTHIRD 
+	call f
 
-c[0]
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, a3
+	mov t4, ax
+	mov ax, t3
+	mov bx, t4
+	add ax, bx
+	mov t5, ax
+	mov ax, b3
+	mov t6, ax
+	mov ax, t5
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov x3, ax
 
-	mov bx, 0
-	add bx, bx
 
+At line no: 9 variable : ID 
+
+x3
 
 At line no: 9 factor : variable
 
-c[0]
+x3
 
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
+	mov ax, x3
 	mov t8, ax
 
 
@@ -691,648 +526,648 @@ At line no: 9 logic_expression : rel_expression
 
 t8
 
-At line no: 9 expression : variable ASSIGNOP logic_expression 
+At line no: 9 expression : logic_expression 
 
-c[1]=t8
+t8
 
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
+At line no: 9 statement : RETURN expression SEMICOLON 
 
-
-At line no: 9 expression_statement : expression SEMICOLON
-
-c[1]=t8;
-
-At line no: 9 statement : expression_statement 
-
-c[1]=t8
-
-At line no: 9 statement : IF LPAREN expression RPAREN statement ELSE statement  
-
-if(t6)t7elsec[1]=t8
-
-	mov ax, a2
-	mov t4, ax
-	mov ax, b2
-	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
-	mov ax, t6
-	cmp ax, 0
-	je L4	;ELSE
-	mov bx, 0
-	add bx, bx
-	jmp L5	;ENDIF
-L4:		;ELSE
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
-L5:		;ENDIF
+return t8;
 
 
 At line no: 9 statements : statements statement
 
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8
+int x;
+x3=t7return t8;
 
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
-	mov bx, 0
-	add bx, bx
-	mov ax, 2
-	mov c2[bx], ax
-	mov ax, a2
+
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t2
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, a3
 	mov t4, ax
-	mov ax, b2
-	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
-	mov ax, t6
-	cmp ax, 0
-	je L4	;ELSE
-	mov bx, 0
-	add bx, bx
-	jmp L5	;ENDIF
-L4:		;ELSE
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
-L5:		;ENDIF
-
-
-At line no: 10 statement : PRINTLN LPAREN ID RPAREN SEMICOLON
-
-println(a);
-
-
-At line no: 10 statements : statements statement
-
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-
-
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
 	mov ax, t3
-	mov b2, ax
-	mov bx, 0
-	add bx, bx
-	mov ax, 2
-	mov c2[bx], ax
-	mov ax, a2
-	mov t4, ax
-	mov ax, b2
-	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
-	mov ax, t6
-	cmp ax, 0
-	je L4	;ELSE
-	mov bx, 0
-	add bx, bx
-	jmp L5	;ENDIF
-L4:		;ELSE
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
-L5:		;ENDIF
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L6: 		;PRINT
-	mov ax, a2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-
-
-At line no: 11 statement : PRINTLN LPAREN ID RPAREN SEMICOLON
-
-println(b);
-
-
-At line no: 11 statements : statements statement
-
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-println(b);
-
-
-	mov ax, 2
-	mov bx, 3
+	mov bx, t4
 	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
-	mov bx, 0
-	add bx, bx
-	mov ax, 2
-	mov c2[bx], ax
-	mov ax, a2
-	mov t4, ax
-	mov ax, b2
 	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
-	mov ax, t6
-	cmp ax, 0
-	je L4	;ELSE
-	mov bx, 0
-	add bx, bx
-	jmp L5	;ENDIF
-L4:		;ELSE
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
-L5:		;ENDIF
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L6: 		;PRINT
-	mov ax, a2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L7: 		;PRINT
-	mov ax, b2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-
-
-At line no: 12 variable : ID 
-
-a2
-
-At line no: 12 factor : CONST_INT 
-
-0
-
-At line no: 12 unary_expression : factor 
-
-0
-
-At line no: 12 term : unary_expression
-
-0
-
-At line no: 12 simple_expression : term
-
-0
-
-At line no: 12 rel_expression : simple_expression 
-
-0
-
-At line no: 12 logic_expression : rel_expression 
-
-0
-
-At line no: 12 expression : logic_expression 
-
-0
-
-At line no: 12 variable : ID LTHIRD expression RTHIRD 
-
-c[0]
-
-	mov bx, 0
-	add bx, bx
-
-
-At line no: 12 factor : variable
-
-c[0]
-
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t9, ax
-
-
-At line no: 12 unary_expression : factor 
-
-t9
-
-At line no: 12 term : unary_expression
-
-t9
-
-At line no: 12 simple_expression : term
-
-t9
-
-At line no: 12 rel_expression : simple_expression 
-
-t9
-
-At line no: 12 logic_expression : rel_expression 
-
-t9
-
-At line no: 12 expression : variable ASSIGNOP logic_expression 
-
-a2=t9
-
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t9, ax
-	mov ax, t9
-	mov a2, ax
-
-
-At line no: 12 expression_statement : expression SEMICOLON
-
-a2=t9;
-
-At line no: 12 statement : expression_statement 
-
-a2=t9
-
-At line no: 12 statements : statements statement
-
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-println(b);
-a2=t9
-
-	mov ax, 2
-	mov bx, 3
+	mov ax, b3
+	mov t6, ax
+	mov ax, t5
+	mov bx, t6
 	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
-	mov bx, 0
-	add bx, bx
-	mov ax, 2
-	mov c2[bx], ax
-	mov ax, a2
-	mov t4, ax
-	mov ax, b2
-	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
-	mov ax, t6
-	cmp ax, 0
-	je L4	;ELSE
-	mov bx, 0
-	add bx, bx
-	jmp L5	;ENDIF
-L4:		;ELSE
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
-L5:		;ENDIF
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L6: 		;PRINT
-	mov ax, a2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L7: 		;PRINT
-	mov ax, b2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t9, ax
-	mov ax, t9
-	mov a2, ax
+	mov t7, ax
+	mov ax, t7
+	mov x3, ax
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push t8		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
 
 
-At line no: 13 statement : PRINTLN LPAREN ID RPAREN SEMICOLON
-
-println(a);
-
-
-At line no: 13 statements : statements statement
-
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-println(b);
-a2=t9println(a);
-
-
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
-	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
-	mov bx, 0
-	add bx, bx
-	mov ax, 2
-	mov c2[bx], ax
-	mov ax, a2
-	mov t4, ax
-	mov ax, b2
-	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
-	mov ax, t6
-	cmp ax, 0
-	je L4	;ELSE
-	mov bx, 0
-	add bx, bx
-	jmp L5	;ENDIF
-L4:		;ELSE
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
-L5:		;ENDIF
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L6: 		;PRINT
-	mov ax, a2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L7: 		;PRINT
-	mov ax, b2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t9, ax
-	mov ax, t9
-	mov a2, ax
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L8: 		;PRINT
-	mov ax, a2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-
-
-At line no: 14 compound_statement : LCURL statements RCURL 
+At line no: 10 compound_statement : LCURL statements RCURL 
 
 {
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-println(b);
-a2=t9println(a);
+int x;
+x3=t7return t8;
 }
 
-ScopeTable# 2 
-1 -->  <c , ID> 
+ScopeTable# 3 
+10 -->  <b , ID> 
+12 -->  <x , ID> 
+19 -->  <a , ID> 
+
+
+
+ScopeTable# 1 
+5 -->  <g , ID> 
+14 -->  <f , ID> 
+
+
+ScopeTable with id 3 removed
+At line no: 10 func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statement
+
+int g(int a,int b){
+int x;
+x3=t7return t8;
+}
+
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t2
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, a3
+	mov t4, ax
+	mov ax, t3
+	mov bx, t4
+	add ax, bx
+	mov t5, ax
+	mov ax, b3
+	mov t6, ax
+	mov ax, t5
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov x3, ax
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push t8		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
+
+	ret
+
+
+At line no: 10 unit : func_definition
+
+int g(int a,int b){
+int x;
+x3=t7return t8;
+}
+
+At line no: 10 program : program unit
+
+int f(int a){
+return t1;
+a2=9}int g(int a,int b){
+int x;
+x3=t7return t8;
+}
+
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t2
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t3, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, a3
+	mov t4, ax
+	mov ax, t3
+	mov bx, t4
+	add ax, bx
+	mov t5, ax
+	mov ax, b3
+	mov t6, ax
+	mov ax, t5
+	mov bx, t6
+	add ax, bx
+	mov t7, ax
+	mov ax, t7
+	mov x3, ax
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push t8		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
+
+	ret
+
+
+At line no: 12 type_specifier : INT
+
+int
+
+New ScopeTable with id 4 created
+At line no: 13 type_specifier : INT
+
+int
+
+At line no: 13 declaration_list : ID
+
+a
+
+At line no: 13 declaration_list : declaration_list COMMA ID 
+
+a,b
+
+At line no: 13 var_declaration : type_specifier declaration_list SEMICOLON
+
+int a,b;
+
+
+At line no: 13 statement : var_declaration
+
+int a,b;
+
+
+At line no: 13 statements : statement
+
+int a,b;
+
+
+At line no: 14 variable : ID 
+
+a4
+
+At line no: 14 factor : CONST_INT 
+
+1
+
+At line no: 14 unary_expression : factor 
+
+1
+
+At line no: 14 term : unary_expression
+
+1
+
+At line no: 14 simple_expression : term
+
+1
+
+At line no: 14 rel_expression : simple_expression 
+
+1
+
+At line no: 14 logic_expression : rel_expression 
+
+1
+
+At line no: 14 expression : variable ASSIGNOP logic_expression 
+
+a4=1
+
+	mov ax, 1
+	mov a4, ax
+
+
+At line no: 14 expression_statement : expression SEMICOLON
+
+a4=1;
+
+At line no: 14 statement : expression_statement 
+
+a4=1
+
+At line no: 14 statements : statements statement
+
+int a,b;
+a4=1
+
+	mov ax, 1
+	mov a4, ax
+
+
+At line no: 15 variable : ID 
+
+b4
+
+At line no: 15 factor : CONST_INT 
+
+2
+
+At line no: 15 unary_expression : factor 
+
+2
+
+At line no: 15 term : unary_expression
+
+2
+
+At line no: 15 simple_expression : term
+
+2
+
+At line no: 15 rel_expression : simple_expression 
+
+2
+
+At line no: 15 logic_expression : rel_expression 
+
+2
+
+At line no: 15 expression : variable ASSIGNOP logic_expression 
+
+b4=2
+
+	mov ax, 2
+	mov b4, ax
+
+
+At line no: 15 expression_statement : expression SEMICOLON
+
+b4=2;
+
+At line no: 15 statement : expression_statement 
+
+b4=2
+
+At line no: 15 statements : statements statement
+
+int a,b;
+a4=1b4=2
+
+	mov ax, 1
+	mov a4, ax
+	mov ax, 2
+	mov b4, ax
+
+
+At line no: 16 variable : ID 
+
+a4
+
+At line no: 16 variable : ID 
+
+a4
+
+At line no: 16 factor : variable
+
+a4
+
+	mov ax, a4
+	mov t9, ax
+
+
+At line no: 16 unary_expression : factor 
+
+t9
+
+At line no: 16 term : unary_expression
+
+t9
+
+At line no: 16 simple_expression : term
+
+t9
+
+At line no: 16 rel_expression : simple_expression 
+
+t9
+
+At line no: 16 logic_expression : rel_expression 
+
+t9
+
+At line no: 16 arguments : logic_expression
+
+t9
+
+At line no: 16 variable : ID 
+
+b4
+
+At line no: 16 factor : variable
+
+b4
+
+	mov ax, b4
+	mov t10, ax
+
+
+At line no: 16 unary_expression : factor 
+
+t10
+
+At line no: 16 term : unary_expression
+
+t10
+
+At line no: 16 simple_expression : term
+
+t10
+
+At line no: 16 rel_expression : simple_expression 
+
+t10
+
+At line no: 16 logic_expression : rel_expression 
+
+t10
+
+At line no: 16 arguments : arguments COMMA logic_expression
+
+t9,t10
+
+At line no: 16 argument_list : arguments
+
+t9,t10
+
+At line no: 16 factor : ID LPAREN argument_list RPAREN
+
+f(t9,t10)
+
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t10
+	push t9
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t11, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+
+
+At line no: 16 unary_expression : factor 
+
+t11
+
+At line no: 16 term : unary_expression
+
+t11
+
+At line no: 16 simple_expression : term
+
+t11
+
+At line no: 16 rel_expression : simple_expression 
+
+t11
+
+At line no: 16 logic_expression : rel_expression 
+
+t11
+
+At line no: 16 expression : variable ASSIGNOP logic_expression 
+
+a4=t11
+
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t10
+	push t9
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t11, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, t11
+	mov a4, ax
+
+
+At line no: 16 expression_statement : expression SEMICOLON
+
+a4=t11;
+
+At line no: 16 statement : expression_statement 
+
+a4=t11
+
+At line no: 16 statements : statements statement
+
+int a,b;
+a4=1b4=2a4=t11
+
+	mov ax, 1
+	mov a4, ax
+	mov ax, 2
+	mov b4, ax
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t10
+	push t9
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t11, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, t11
+	mov a4, ax
+
+
+At line no: 17 statement : PRINTLN LPAREN ID RPAREN SEMICOLON
+
+println(a);
+
+
+At line no: 17 statements : statements statement
+
+int a,b;
+a4=1b4=2a4=t11println(a);
+
+
+	mov ax, 1
+	mov a4, ax
+	mov ax, 2
+	mov b4, ax
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t10
+	push t9
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t11, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, t11
+	mov a4, ax
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L0: 		;PRINT
+	mov ax, a4
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+
+
+At line no: 18 factor : CONST_INT 
+
+0
+
+At line no: 18 unary_expression : factor 
+
+0
+
+At line no: 18 term : unary_expression
+
+0
+
+At line no: 18 simple_expression : term
+
+0
+
+At line no: 18 rel_expression : simple_expression 
+
+0
+
+At line no: 18 logic_expression : rel_expression 
+
+0
+
+At line no: 18 expression : logic_expression 
+
+0
+
+At line no: 18 statement : RETURN expression SEMICOLON 
+
+return 0;
+
+
+At line no: 18 statements : statements statement
+
+int a,b;
+a4=1b4=2a4=t11println(a);
+return 0;
+
+
+	mov ax, 1
+	mov a4, ax
+	mov ax, 2
+	mov b4, ax
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t10
+	push t9
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t11, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, t11
+	mov a4, ax
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L0: 		;PRINT
+	mov ax, a4
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push 0		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
+
+
+At line no: 19 compound_statement : LCURL statements RCURL 
+
+{
+int a,b;
+a4=1b4=2a4=t11println(a);
+return 0;
+}
+
+ScopeTable# 4 
 10 -->  <b , ID> 
 19 -->  <a , ID> 
 
@@ -1340,85 +1175,50 @@ ScopeTable# 2
 
 ScopeTable# 1 
 3 -->  <main , ID> 
+5 -->  <g , ID> 
+14 -->  <f , ID> 
 
 
-ScopeTable with id 2 removed
-At line no: 14 func_definition : type_specifier ID LPAREN RPAREN compound_statement
+ScopeTable with id 4 removed
+At line no: 19 func_definition : type_specifier ID LPAREN RPAREN compound_statement
 
 int main(){
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-println(b);
-a2=t9println(a);
+int a,b;
+a4=1b4=2a4=t11println(a);
+return 0;
 }
 
-	mov ax, 2
-	mov bx, 3
-	add ax, bx
-	mov t0, ax
 	mov ax, 1
-	mov bx, t0
-	mul bx
-	mov t1, ax
-	mov ax, t1
-	mov bx, 3
-	xor dx, dx
-	idiv bx
-	mov t2, dx
-	mov ax, t2
-	mov a2, ax
-	mov ax, 1
-	cmp ax, 5
-	jl L0
-	mov t3, 0
-	jmp L1
-L0:
-	mov t3, 1
-L1:
-	mov ax, t3
-	mov b2, ax
-	mov bx, 0
-	add bx, bx
+	mov a4, ax
 	mov ax, 2
-	mov c2[bx], ax
-	mov ax, a2
-	mov t4, ax
-	mov ax, b2
-	mov t5, ax
-	mov ax, t4
-	mov bx, t5
-	cmp ax, 0
-	je L2
-	cmp bx, 0
-	je L2
-	mov t6, 1
-	jmp L3
-L2: 
-	mov t6, 0
-L3: 
-	mov ax, t6
-	cmp ax, 0
-	je L4	;ELSE
-	mov bx, 0
-	add bx, bx
-	jmp L5	;ENDIF
-L4:		;ELSE
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t8, ax
-	mov bx, 1
-	add bx, bx
-	mov ax, t8
-	mov c2[bx], ax
-L5:		;ENDIF
+	mov b4, ax
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t10
+	push t9
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t11, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, t11
+	mov a4, ax
 	MOV AH,2
 	MOV DL,0Dh
 	INT 21H
 	MOV DL,0Ah
 	INT 21H
-L6: 		;PRINT
-	mov ax, a2
+L0: 		;PRINT
+	mov ax, a4
 
 	CALL OUTDEC
 	MOV AH,2
@@ -1426,67 +1226,84 @@ L6: 		;PRINT
 	INT 21H
 	MOV DL,0Ah
 	INT 21H
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L7: 		;PRINT
-	mov ax, b2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-	mov bx, 0
-	add bx, bx
-	mov ax, c2[bx]
-	mov t9, ax
-	mov ax, t9
-	mov a2, ax
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
-L8: 		;PRINT
-	mov ax, a2
-
-	CALL OUTDEC
-	MOV AH,2
-	MOV DL,0Dh
-	INT 21H
-	MOV DL,0Ah
-	INT 21H
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push 0		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
 
 
-At line no: 14 unit : func_definition
+At line no: 19 unit : func_definition
 
 int main(){
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-println(b);
-a2=t9println(a);
+int a,b;
+a4=1b4=2a4=t11println(a);
+return 0;
 }
 
-At line no: 14 program : unit
+At line no: 19 program : program unit
 
-int main(){
-int a,b,c[3];
-a2=t2b2=t3c[0]=2if(t6)t7elsec[1]=t8println(a);
-println(b);
-a2=t9println(a);
+int f(int a){
+return t1;
+a2=9}int g(int a,int b){
+int x;
+x3=t7return t8;
+}int main(){
+int a,b;
+a4=1b4=2a4=t11println(a);
+return 0;
 }
+
+	mov ax, 1
+	mov a4, ax
+	mov ax, 2
+	mov b4, ax
+
+	;push register data
+	push ax
+	push bx
+	push cx
+	push dx
+
+	push t10
+	push t9
+
+	call f
+
+	pop ax		;function's return value in ax register
+	mov t11, ax
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	mov ax, t11
+	mov a4, ax
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+L0: 		;PRINT
+	mov ax, a4
+
+	CALL OUTDEC
+	MOV AH,2
+	MOV DL,0Dh
+	INT 21H
+	MOV DL,0Ah
+	INT 21H
+	pop bx		;RETRIEVE RETURN ADDRESS FROM THE CALL.
+	push 0		;VALUE TO RETURN 
+	push bx		;PUT RETURN ADDRESS BACK.
+
 
 	Symbol Table: 
 
 ScopeTable# 1 
 3 -->  <main , ID> 
+5 -->  <g , ID> 
+14 -->  <f , ID> 
 
 
-Total Lines: 15
+Total Lines: 20
 
-Total Errors: 3
+Total Errors: 5
 
